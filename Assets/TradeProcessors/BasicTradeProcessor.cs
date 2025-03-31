@@ -4,23 +4,21 @@ using System.Linq;
 public class BasicTradeProcessor : iTradeProcessor
 {
      private List<iOrderPrioritizer> _orderPrioritizers = new();
-     private readonly List<Order> _tradesSentToTheMarket = new();
-
      private readonly iTransactionManager _transactionManager;
-
 
     public BasicTradeProcessor()
     {   
         _orderPrioritizers.Add(new LessaizfairePrioritizer());
         _transactionManager = new BasicTransactionManager();
     }
-    public List<Order> GetOrders()=>_tradesSentToTheMarket;
+    
     public List<Order> GetOrderResults(ActionContext context)
     {
-        return _tradesSentToTheMarket
+        return context.MarketToSubmitTo.GetOrdersSentToMarket()
                 .Where(x => x.Buyer == context.TradeToSubmit.Buyer || x.Seller == context.TradeToSubmit.Seller)
                 .ToList();
     }
+    
     public List<Order> ProcessCompanyOrders(Market market)
     {
         List<Order> executedTrades = new();
@@ -32,7 +30,7 @@ public class BasicTradeProcessor : iTradeProcessor
         {
            executedTrades.AddRange(ExecuteBestTradesForGood(good,market,ordersInPeriod));
         }
-        _tradesSentToTheMarket.RemoveAll(x=>x.IsFullyFilled);
+        market.RemoveFilledOrders();
         return executedTrades;
     }
 
@@ -115,14 +113,14 @@ public class BasicTradeProcessor : iTradeProcessor
         return sellOrders.Any() ? sellOrders.First() : null;
     }
 
-    private bool SellOrdersExistInMarket()
+    private bool SellOrdersExistInMarket(Market market)
     {
-        var sellOrdersExist = _tradesSentToTheMarket.Any(x => x.Seller!=null);
+        var sellOrdersExist = market.GetOrdersSentToMarket().Any(x => x.Seller!=null);
         return sellOrdersExist;
     }
-    private bool BuyOrdersExistInMarket()
+    private bool BuyOrdersExistInMarket(Market market)
     {
-        var buyOrdersExist = _tradesSentToTheMarket.Any(x => x.Buyer!=null);
+        var buyOrdersExist = market.GetOrdersSentToMarket().Any(x => x.Buyer!=null);
         return buyOrdersExist;
     }
 
@@ -130,7 +128,7 @@ public class BasicTradeProcessor : iTradeProcessor
     {
         var primaryOrder = GeneratePrimaryOrder(market,good);
         var counterPartiesForOrder = market.GetOrdersSentToMarket()
-                                    .Where (x=>IsValidCounterParty(x, primaryOrder)
+                                    .Where (x=>IsValidCounterParty(x, primaryOrder, market)
                                     && x.Good.Equals(primaryOrder.Good))
                                     .OrderBy(x=>x.Buyer != null? -x.Price:x.Price)
                                     .ToList();
@@ -143,7 +141,7 @@ public class BasicTradeProcessor : iTradeProcessor
         return LemonadeStandResultObject.Success(counterPartiesForOrder);
     }
 
-    internal bool IsValidCounterParty(Order order, Order primaryOrder)
+    internal bool IsValidCounterParty(Order order, Order primaryOrder, Market market)
     {
         //Goods must match
         if(!order.Good.Equals(primaryOrder.Good)) return false;
@@ -165,8 +163,8 @@ public class BasicTradeProcessor : iTradeProcessor
                                     || primaryOrder.Seller is not null;
         var orderIsABuyPrimaryIsBuy=order.Buyer is not null
                                     || primaryOrder.Buyer is not null;
-        var buyOrdersExistInMarket = BuyOrdersExistInMarket();
-        var sellOrdersExistInMarket = SellOrdersExistInMarket();
+        var buyOrdersExistInMarket = BuyOrdersExistInMarket(market);
+        var sellOrdersExistInMarket = SellOrdersExistInMarket(market);
         
         //If only buys or sells exist, there is no counterparty
         if(orderIsASellPrimaryIsSell && !buyOrdersExistInMarket) return false;
@@ -186,11 +184,6 @@ public class BasicTradeProcessor : iTradeProcessor
     }
     public LemonadeStandResultObject QueueOrder(ActionContext context)
     {
-        if(_tradesSentToTheMarket.Contains(context.TradeToSubmit))
-            {
-                return LemonadeStandResultObject.Failure(ResultTypeEnum.DuplicateOrder, "Order already exists in the queue");
-            }
-        _tradesSentToTheMarket.Add(context.TradeToSubmit);
-        return LemonadeStandResultObject.Success();
+        return context.MarketToSubmitTo.QueueOrder(context);
     }
 }

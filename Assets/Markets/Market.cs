@@ -238,8 +238,8 @@ public class Market : ScriptableObject, iCompany
 #region Convenience Methods
     public decimal GetCash() => cash;
     public Inventory GetInventory() => _inventory;
-    public List<Order>GetOrdersSentToMarket()=>_tradeProcessor.GetOrders();
-    public List<Order>GetOrdersSentToMarketByCompany(Company company)=>_tradeProcessor.GetOrders().Where(x=>x.SubmittingCompany.Equals(company)).ToList();
+    public List<Order> GetOrdersSentToMarket() => _tradesSentToMarket;
+    public List<Order> GetOrdersSentToMarketByCompany(Company company) => _tradesSentToMarket.Where(x=>x.SubmittingCompany.Equals(company)).ToList();
     public List<Recipe> GetRecipes()=>_recipes;
     public Dictionary<Good, DemandData> GetPopulationDemand()
     {
@@ -271,6 +271,10 @@ public class Market : ScriptableObject, iCompany
     public void RecordTrade(Execution trade) 
     {
         if(!_executedTradesInPeriod.Contains(trade))_executedTradesInPeriod.Add(trade);
+    }
+    public void RemoveFilledOrders()
+    {
+        _tradesSentToMarket.RemoveAll(x => x.IsFullyFilled);
     }
     public void SetCash(decimal new_cash) => cash = new_cash;
 #endregion
@@ -380,6 +384,7 @@ public class Market : ScriptableObject, iCompany
         //Record the order
         LogOrder(context.TradeToSubmit, context.Period);
         
+        _tradesSentToMarket.Add(context.TradeToSubmit);
         return LemonadeStandResultObject.Success();
     }
    
