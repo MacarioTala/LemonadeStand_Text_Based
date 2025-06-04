@@ -19,7 +19,8 @@ public class GameManager : MonoBehaviour
     private TypeWriter typeWriterInstance;
     [SerializeField] private TextMeshProUGUI typeWrittenText;
 
-    ITradeLogger TradeLogger;
+    private IEconomicEngine _economicEngine;
+    private ITradeLogger _tradeLogger;
 
     int Period=0;
     private void Awake()
@@ -47,15 +48,26 @@ public class GameManager : MonoBehaviour
     {
         IsGameRunning = true;
 
-        if(TheEconomy.Instance == null)
+        // Configure economic services if not already done
+        if (!EconomicServiceContainer.Instance.IsRegistered<IEconomicEngine>())
         {
-            Debug.Log("The Economy is not initialised. Add Economy to Scene.");
-            return;
+            EconomicServiceContainer.Instance.ConfigureDefaults();
         }
 
-        TradeLogger = new TradeLoggerV1();
-        Period = TheEconomy.Instance.tradingPeriod;
-        TheEconomy.Instance.Initialize(TradeLogger);
+        // Get economic engine from dependency injection
+        try
+        {
+            _economicEngine = EconomicServiceContainer.Instance.Resolve<IEconomicEngine>();
+            _tradeLogger = EconomicServiceContainer.Instance.Resolve<ITradeLogger>();
+            
+            Period = _economicEngine.TradingPeriod;
+            _economicEngine.Initialize(_tradeLogger);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Failed to initialize economic engine: {ex.Message}");
+            return;
+        }
 
         if(splashTypewriterPrefab != null)
         {
@@ -116,8 +128,8 @@ public class GameManager : MonoBehaviour
         if(!IsGameRunning) return;
 
         Debug.Log($"Ending Turn {Period} ...");
-        TheEconomy.Instance.EndTradingPeriod();
-        Period=TheEconomy.Instance.tradingPeriod;
+        _economicEngine.EndTradingPeriod();
+        Period = _economicEngine.TradingPeriod;
 
         CheckGameStatus();
         //UI code goes here

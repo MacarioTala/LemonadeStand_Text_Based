@@ -5,7 +5,7 @@ using System;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Tests")]
-public class TheEconomy : MonoBehaviour
+public class TheEconomy : MonoBehaviour, IEconomicEngine
 {
     //The Economy is a singleton that manages the market and all companies
     private static TheEconomy _instance;
@@ -27,6 +27,11 @@ public class TheEconomy : MonoBehaviour
     public List<Good> goods = new();
     
     internal ITradeLogger _trade_logger;
+
+    // Interface properties
+    public int TradingPeriod => tradingPeriod;
+    public IReadOnlyList<iCompany> Companies => companies.AsReadOnly();
+    public IReadOnlyList<Good> Goods => goods.AsReadOnly();
 
     public Dictionary<Guid,List<Execution>> GetAllTransactions(int period) 
     {

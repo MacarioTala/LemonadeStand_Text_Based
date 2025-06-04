@@ -21,8 +21,8 @@ public class TextBasedGameManager : MonoBehaviour
 #endregion
     public static TextBasedGameManager Instance { get; private set; }
     private TypeWriter typeWriterInstance;
-    public TheEconomy TheEconomy;
-    private ITradeLogger TradeLogger;
+    private IEconomicEngine _economicEngine;
+    private ITradeLogger _tradeLogger;
 #region Game Variables
     public bool IsGameRunning { get; private set; }
     int Period = 0;
@@ -73,21 +73,26 @@ public class TextBasedGameManager : MonoBehaviour
     {
         IsGameRunning = true;
 
-        if(TheEconomy == null)
+        // Configure economic services if not already done
+        if (!EconomicServiceContainer.Instance.IsRegistered<IEconomicEngine>())
         {
-            try{
-                TheEconomy = FindObjectOfType<TheEconomy>();
-            }
-            catch (System.Exception)
-            {
-                Debug.Log("The Economy is not initialised. Add Economy to Scene.");
-                return;
-            }
+            EconomicServiceContainer.Instance.ConfigureDefaults();
         }
 
-        TradeLogger = new TradeLoggerV1();
-        Period = TheEconomy.Instance.tradingPeriod;
-        TheEconomy.Initialize(TradeLogger);
+        // Get economic engine from dependency injection
+        try
+        {
+            _economicEngine = EconomicServiceContainer.Instance.Resolve<IEconomicEngine>();
+            _tradeLogger = EconomicServiceContainer.Instance.Resolve<ITradeLogger>();
+            
+            Period = _economicEngine.TradingPeriod;
+            _economicEngine.Initialize(_tradeLogger);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Failed to initialize economic engine: {ex.Message}");
+            return;
+        }
 
         if(splashTypewriterPrefab != null)
         {
@@ -167,8 +172,8 @@ public class TextBasedGameManager : MonoBehaviour
         }
 
         Debug.Log($"Ending Turn {Period}");
-        TheEconomy.Instance.EndTradingPeriod();
-        Period = TheEconomy.Instance.tradingPeriod;
+        _economicEngine.EndTradingPeriod();
+        Period = _economicEngine.TradingPeriod;
 
         CheckGameStatus();
     }

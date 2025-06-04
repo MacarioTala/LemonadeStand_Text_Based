@@ -69,3 +69,6 @@ crashlytics-build.properties
 
 # Idea
 .idea/
+
+# Claude
+.claude
