@@ -5,8 +5,8 @@ public class Goal
 {
     public string Name { get; set; }
     public string Description { get; set; }
-    public Func<iCompany, bool> IsGoalMet { get; set; }
-    public Action<Company,Goal> InitializeGoal { get; set; }
+    public Func<iEconAgent, bool> IsGoalMet { get; set; }
+    public Action<EconAgent,Goal> InitializeGoal { get; set; }
     public MetricEnum AffectsMetric { get; set; }
     public float MetricTarget { get; set; }
     public bool IsReduce=true;
@@ -15,7 +15,7 @@ public class Goal
 
     public Dictionary<string,object> OriginalValues {get;private set;} = new ();
 
-    public Goal(string name, string description, Func<iCompany, bool> isGoalMet,Action<Company,Goal> initializeGoal=null)
+    public Goal(string name, string description, Func<iEconAgent, bool> isGoalMet,Action<EconAgent,Goal> initializeGoal=null)
     {
         Name = name;
         Description = description;
@@ -43,7 +43,7 @@ public class Goal
             OriginalValues.Add(key, value);
         }
     }
-    public void Initialize(Company company)
+    public void Initialize(EconAgent company)
     {
         InitializeGoal?.Invoke(company,this);
     }
@@ -81,13 +81,13 @@ public static class GoalBuilder
         return goal;
     }
 
-    public static Goal WithGoalEvaluator(this Goal goal, Func<iCompany, bool> goalEvaluator)
+    public static Goal WithGoalEvaluator(this Goal goal, Func<iEconAgent, bool> goalEvaluator)
     {
         goal.IsGoalMet = goalEvaluator;
         return goal;
     }
 
-    public static Goal WithGoalInitializer(this Goal goal, Action<Company,Goal> goalInitializer)
+    public static Goal WithGoalInitializer(this Goal goal, Action<EconAgent,Goal> goalInitializer)
     {
         goal.InitializeGoal = goalInitializer;
         return goal;

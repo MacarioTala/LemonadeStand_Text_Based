@@ -239,7 +239,7 @@ public partial class BasicTradeProcessorTests
                                     )
     {
         // Arrange
-        var Company3 = Company.Factory.Create("Company 3", CompanyLevelEnum.Beginner);
+        var Company3 = EconAgent.Factory.Create("Company 3", AgentLevelEnum.Beginner);
         Company2.GetInventory().AddGood(new InventoryEntry(RadioactiveLemonade, Seller1InventoryQuantity, Seller1AcquirePrice, Period));
         Company3.GetInventory().AddGood(new InventoryEntry(RadioactiveLemonade, Seller2InventoryQuantity, Seller2AcquirePrice, Period));
         
@@ -312,7 +312,7 @@ public partial class BasicTradeProcessorTests
     )
     {
         //Arrange
-        var Company3 = Company.Factory.Create("Company 3", CompanyLevelEnum.Beginner);
+        var Company3 = EconAgent.Factory.Create("Company 3", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(Company3);
         Company3.GetInventory().AddGood(new InventoryEntry(RadioactiveLemonade, SellerInventoryQuantity, SellerAcquirePrice, Period));
 

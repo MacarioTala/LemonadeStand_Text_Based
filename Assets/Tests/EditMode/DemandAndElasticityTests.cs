@@ -16,8 +16,8 @@ public class DemandAndElasticityTests
     Recipe LemonadeRecipe;
 
     GoodEffect ReduceEnnuiEffect;
-    PopulationCompany TestPopulation;
-    Company Company1;
+    PopulationAgent TestPopulation;
+    EconAgent Company1;
     Market TestMarket;
     iStrategy testPopulationStrategy;
     iDemandStrategy TestDemandStrategy;
@@ -56,7 +56,7 @@ public class DemandAndElasticityTests
                     .Named("Reduce Ennui")
                     .DescribedAs("Reduces the ennui of the population by 0.3")
                     .WithEffectMagnitude(0.3f)
-                    .WithEffect(new MetricModifier<PopulationCompany>(
+                    .WithEffect(new MetricModifier<PopulationAgent>(
                            c => c.Ennui,
                            (c, newValue) => c.Ennui = newValue));
 
@@ -77,14 +77,14 @@ public class DemandAndElasticityTests
         
         TestDemandStrategy = ScriptableObject.CreateInstance<LinearDemandStrategy>();
 
-        TestPopulation = CompanyBuilder.For<PopulationCompany>()
+        TestPopulation = EconAgentBuilder.For<PopulationAgent>()
                     .Named("Test Population")
                     .WithPopulation(initialPopulation)
                     .WithEnnui(.99f)
                     .WithBehaviourStrategy(testPopulationStrategy)
                     .Build();
 
-        TestMarket = Market.Factory.CreateStarterMarket("Test Market", CompanyLevelEnum.Market, TestDemandStrategy);
+        TestMarket = Market.Factory.CreateStarterMarket("Test Market", AgentLevelEnum.Market, TestDemandStrategy);
         TestMarket.RegisterMarketParticipant(TestPopulation);
     }
     [TearDown]

@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 [assembly: InternalsVisibleTo("Tests")]
 [CreateAssetMenu(fileName = "Market", menuName = "LemonadeStandAssets/Market", order = 1)]
-public class Market : ScriptableObject, iCompany
+public class Market : ScriptableObject, iEconAgent
 {
     #region Fields, Properties
 
@@ -32,7 +32,7 @@ public class Market : ScriptableObject, iCompany
         get => _companyName;
         set => _companyName = value;
     }
-    public CompanyLevelEnum company_level;
+    public AgentLevelEnum company_level;
     #region Demand
     public List<MarketData> MarketData { get; } = new();//bid/ask spread for companies
     private readonly Dictionary<Good, DemandData> _marketDemand = new();
@@ -63,7 +63,7 @@ public class Market : ScriptableObject, iCompany
                     .ToDictionary(g => g.Key, g => g.Average(x => x.Ask));
 
         var perceivedCost = _marketParticipants
-                    .Where(x => x is not PopulationCompany)
+                    .Where(x => x is not PopulationAgent)
                     .SelectMany(x => x.Recipes
                         .Where(r => r.GetProduct().Equals(good))
                            )
@@ -86,9 +86,9 @@ public class Market : ScriptableObject, iCompany
     public int GetHeight() => MarketSize.y;
 
     //Companies
-    private readonly List<Company> _marketParticipants = new();
-    public List<Company> GetMarketParticipants() => _marketParticipants;
-    public void RegisterMarketParticipant(Company marketParticipant)
+    private readonly List<EconAgent> _marketParticipants = new();
+    public List<EconAgent> GetMarketParticipants() => _marketParticipants;
+    public void RegisterMarketParticipant(EconAgent marketParticipant)
     {
         if (!_marketParticipants.Contains(marketParticipant))
         {
@@ -101,7 +101,7 @@ public class Market : ScriptableObject, iCompany
         }
         TheEconomy.Instance.RegisterCompany(marketParticipant);
     }
-    public LemonadeStandResultObject RemoveMarketParticipant(Company company)
+    public LemonadeStandResultObject RemoveMarketParticipant(EconAgent company)
     {
         if (_marketParticipants.Contains(company))
         {
@@ -124,10 +124,10 @@ public class Market : ScriptableObject, iCompany
     public int GetPopulation() => _demographicManager.GetPopulation();
     public List<PopulationHistory> GetPopulationHistory() => _demographicManager.GetPopulationHistory(MarketId);
 
-    public LemonadeStandResultObject SetPopulation(int newPopulation, PopulationCompany marketParticipant)
+    public LemonadeStandResultObject SetPopulation(int newPopulation, PopulationAgent marketParticipant)
     {
         var actor = _marketParticipants
-            .OfType<PopulationCompany>()
+            .OfType<PopulationAgent>()
             .Where(x => x.Equals(marketParticipant))
             .FirstOrDefault();
         if (actor == null)
@@ -279,7 +279,7 @@ public class Market : ScriptableObject, iCompany
     public decimal GetCash() => cash;
     public Inventory GetInventory() => _inventory;
     public List<Order> GetOrdersSentToMarket() => _tradeProcessor.GetOrders();
-    public List<Order> GetOrdersSentToMarketByCompany(Company company) => _tradeProcessor?.GetOrders()?.Where(x => x.SubmittingCompany.Equals(company)).ToList()?? new List<Order>();
+    public List<Order> GetOrdersSentToMarketByCompany(EconAgent company) => _tradeProcessor?.GetOrders()?.Where(x => x.SubmittingCompany.Equals(company)).ToList()?? new List<Order>();
     public List<Recipe> GetRecipes() => _recipes;
     public Dictionary<Good, DemandData> GetPopulationDemand()
     {
@@ -288,7 +288,7 @@ public class Market : ScriptableObject, iCompany
         // In the future, we'll need to know how to merge the different demands
         // for the same good across multiple market segments/populationCompanies.
         var participantDemand = _marketParticipants
-               .OfType<PopulationCompany>()
+               .OfType<PopulationAgent>()
                .SelectMany(x => x.GetDemand())
                .ToDictionary(x => x.Key, x => x.Value);
 
@@ -332,7 +332,7 @@ public class Market : ScriptableObject, iCompany
     {
         public static readonly StarterMarketInitializer starterMarketInitializer = new();
 
-        public static Market CreateMarket(string companyName, CompanyLevelEnum companyLevel)
+        public static Market CreateMarket(string companyName, AgentLevelEnum companyLevel)
         {
             var market = CreateInstance<Market>();
             market.Name = companyName;
@@ -344,7 +344,7 @@ public class Market : ScriptableObject, iCompany
             return market;
         }
 
-        public static Market CreateStarterMarket(string companyName, CompanyLevelEnum companyLevel, iDemandStrategy demandStrategy)
+        public static Market CreateStarterMarket(string companyName, AgentLevelEnum companyLevel, iDemandStrategy demandStrategy)
         {
             demandStrategy ??= CreateInstance<LinearDemandStrategy>();
             var market = CreateInstance<Market>()
@@ -392,13 +392,13 @@ public class Market : ScriptableObject, iCompany
 
     #endregion
     #region Company Interactions
-    public void EvaluateParticipantCollapse(Company company)
+    public void EvaluateParticipantCollapse(EconAgent company)
     {
         if (company.IsBankrupt())
         {
             TheEconomy.Instance.HandleParticipantCollapse(this, company);
         }
-        if (company is PopulationCompany populationCompany)
+        if (company is PopulationAgent populationCompany)
         {
             if (populationCompany.IsMaxEnnui())
             {
@@ -455,7 +455,7 @@ public class Market : ScriptableObject, iCompany
     }
     internal void ConsumeGoods()
     {
-        foreach (var participant in _marketParticipants.OfType<PopulationCompany>())
+        foreach (var participant in _marketParticipants.OfType<PopulationAgent>())
         {
             participant.Consume();
         }
@@ -545,7 +545,7 @@ public class Market : ScriptableObject, iCompany
         // In the future, we may need to merge fulfillment rates 
         // from multiple PopulationCompanies/market segments.
         var populationCompany = _marketParticipants
-            .OfType<PopulationCompany>()
+            .OfType<PopulationAgent>()
             .FirstOrDefault();
         if (populationCompany != null)
         {
@@ -669,7 +669,7 @@ public class Market : ScriptableObject, iCompany
     private void LocalAgentsAct(int period)
     {
         var marketParticipants = _marketParticipants
-                                .OfType<PopulationCompany>()
+                                .OfType<PopulationAgent>()
                                 .ToList();
 
         if (marketParticipants.Count() == 0)

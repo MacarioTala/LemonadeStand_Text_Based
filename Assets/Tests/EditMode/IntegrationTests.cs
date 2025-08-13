@@ -10,8 +10,8 @@ public class IntegrationTests
 {
     TheEconomy TestEconomy;
     Market TestMarket;
-    Company Company1;
-    Company Company2;
+    EconAgent Company1;
+    EconAgent Company2;
 
     float initialEnnui = 0.5f;
     int initialPopulation = 1000;
@@ -19,7 +19,7 @@ public class IntegrationTests
 
     iFixedCostStrategy testFixedCostStrategy;
 
-    PopulationCompany TestPopulation;
+    PopulationAgent TestPopulation;
 
     Good Lemonade;
     const int Period = 0;
@@ -39,7 +39,7 @@ public class IntegrationTests
         var existingMarket = TheEconomy.Instance.GetMarketByName("The First Market");
         TheEconomy.Instance.RemoveMarket(existingMarket);
 
-        TestMarket = Market.Factory.CreateMarket("The First Market", CompanyLevelEnum.Market)
+        TestMarket = Market.Factory.CreateMarket("The First Market", AgentLevelEnum.Market)
             .WithDemandStrategy(TestDemandStrategy)
             .WithDataService(TestMarketDataService)
             .WithSupplyProvider(TestSupplyProvider)
@@ -55,8 +55,8 @@ public class IntegrationTests
             .WithAggressionLevel(0.5m)
             .Build();
 
-        Company1 = Company.Factory.Create("Company1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company2", AgentLevelEnum.Beginner);
 
         TestMarket.RegisterMarketParticipant(Company1);
         TestMarket.RegisterMarketParticipant(Company2);
@@ -72,7 +72,7 @@ public class IntegrationTests
                 .DescribedAs("Reduces ennui")
                 .Affecting(MetricEnum.Ennui)
                 .WithEffectMagnitude(-.40f)
-                .WithEffect(new MetricModifier<PopulationCompany>(
+                .WithEffect(new MetricModifier<PopulationAgent>(
                             c => c.Ennui,
                             (c, newValue) => c.Ennui = newValue));
       Lemonade.AddEffect(reduceEnnuiEffect);
@@ -110,8 +110,8 @@ public class IntegrationTests
     {
         // Arrange
         var market = TestMarket;
-        var buyer = Company.Factory.Create("Buyer", CompanyLevelEnum.Beginner);
-        var seller = Company.Factory.Create("Seller", CompanyLevelEnum.Beginner);
+        var buyer = EconAgent.Factory.Create("Buyer", AgentLevelEnum.Beginner);
+        var seller = EconAgent.Factory.Create("Seller", AgentLevelEnum.Beginner);
         market.RegisterMarketParticipant(buyer);
         market.RegisterMarketParticipant(seller);
         var good =Good.CreateInstance("Good", new PriceBand(1m, 2m), RarityEnum.Common);
@@ -196,7 +196,7 @@ public class IntegrationTests
               {Lemonade,demandForLemonade}
             };
 
-        TestPopulation = CompanyBuilder.For<PopulationCompany>()
+        TestPopulation = EconAgentBuilder.For<PopulationAgent>()
              .Named("Test Population")
              .WithInitialCash(1000)
              .WithEnnui(initialEnnui)
@@ -248,7 +248,7 @@ public class IntegrationTests
               {Lemonade,demandForLemonade}
             };
 
-        TestPopulation = CompanyBuilder.For<PopulationCompany>()
+        TestPopulation = EconAgentBuilder.For<PopulationAgent>()
              .Named("Test Population")
              .WithInitialCash(1000)
              .WithEnnui(initialEnnui)
@@ -317,7 +317,7 @@ public class IntegrationTests
         var TestDataHandler2 = new MockPopulationHistoryDataHandler();
         TestDemographicManager2.SetPopulationHistoryHandler(TestDataHandler2);
 
-        var SecondMarket = Market.Factory.CreateMarket("Second Market", CompanyLevelEnum.Market)
+        var SecondMarket = Market.Factory.CreateMarket("Second Market", AgentLevelEnum.Market)
             .WithDemandStrategy(TestDemandStrategy)
             .WithDataService(TestMarketDataService)
             .WithSupplyProvider(TestSupplyProvider)
@@ -359,7 +359,7 @@ public class IntegrationTests
         //Arrange
         var period = 0;
         var good = Good.CreateInstance("Good", new PriceBand(1m, 2m), RarityEnum.Common);
-        var company = Company.Factory.Create("Company", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Company", AgentLevelEnum.Beginner);
         var market = TestMarket;
         market.RegisterMarketParticipant(company);
         company.GetInventory().AddGood(new InventoryEntry(good, 10, 1, 0));
@@ -383,7 +383,7 @@ public class IntegrationTests
         //Arrange
         var period = 0;
         var good = Good.CreateInstance("Good", new PriceBand(1m, 2m), RarityEnum.Common);
-        var company = Company.Factory.Create("Company", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Company", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(company);
         company.GetInventory().AddGood(new InventoryEntry(good, 10, 1, 0));
         var MarketBuysGoodFromCompany1 = new Order(TestMarket, company, good, 10, 1);

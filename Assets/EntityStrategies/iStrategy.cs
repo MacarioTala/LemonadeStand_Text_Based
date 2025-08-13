@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public interface iStrategy
 {
-    void GenerateGoals(iCompany company);
+    void GenerateGoals(iEconAgent company);
     decimal GetAggressionLevel();//Aggression level is a number from 0 to 1 determining how much 'extra' a population is willing to pay for the good
     LemonadeStandResultObject SetAggressionLevel(decimal aggressionLevel);
     public void PerformStrategy(ActionContext context);
-    public void PerformStrategy(iCompany company);
+    public void PerformStrategy(iEconAgent company);
 
     #region Default implementations
     /// <summary>
@@ -15,7 +15,7 @@ public interface iStrategy
     /// that can be used by any strategy.
     /// </summary>
 
-    public static decimal GetCostAnchoredBid(Good good, Company company)
+    public static decimal GetCostAnchoredBid(Good good, EconAgent company)
     {
         var market = company.GetMarket();
         decimal perceivedCost;
@@ -32,7 +32,7 @@ public interface iStrategy
         var initialBid = perceivedCost;
         return initialBid;
     }
-    public static int GetQuantityDemandedAtState(Good good, Company company, Dictionary<ElasticDemandComponentEnum, float> stateChanges)
+    public static int GetQuantityDemandedAtState(Good good, EconAgent company, Dictionary<ElasticDemandComponentEnum, float> stateChanges)
     {
         var demand = company.GetDemandFor(good);
         var market = company.GetMarket();

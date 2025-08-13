@@ -76,7 +76,7 @@ public static class MarketBuilder
         return market;
     }
 
-    public static Market WithLevel(this Market market, CompanyLevelEnum level)
+    public static Market WithLevel(this Market market, AgentLevelEnum level)
     {
         market.company_level = level;
         return market;
@@ -87,7 +87,7 @@ public static class MarketBuilder
         return market;
     }
 
-    public static Market PopulatedWith(this Market market, List<PopulationCompany> marketParticipants)
+    public static Market PopulatedWith(this Market market, List<PopulationAgent> marketParticipants)
     {
 
         foreach  (var particpant in marketParticipants)

@@ -84,7 +84,7 @@ public class Good : ScriptableObject
     {
         _effects.Remove(effect);
     }
-    public void ApplyEffects(PopulationCompany company, float percentageOfEffectToApply=1f)
+    public void ApplyEffects(PopulationAgent company, float percentageOfEffectToApply=1f)
     {
         foreach (var effect in _effects)
         {

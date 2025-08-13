@@ -18,8 +18,8 @@ public partial class BasicTradeProcessorTests
     Good Lemon;
     Good Radium;
 
-    Company Company1;
-    Company Company2;
+    EconAgent Company1;
+    EconAgent Company2;
 
     [SetUp]
     public void SetUp()
@@ -27,13 +27,13 @@ public partial class BasicTradeProcessorTests
         TheEconomy.SetupForTests(new MockLogger());
         TestEconomy = TheEconomy.Instance;
 
-        Company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company 2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company 2", AgentLevelEnum.Beginner);
 
         TestDemandStrategy = ScriptableObject.CreateInstance<LinearDemandStrategy>();
         TestTradeProcessor = new BasicTradeProcessor();
 
-        TestMarket = Market.Factory.CreateMarket("Test Market", CompanyLevelEnum.Market)
+        TestMarket = Market.Factory.CreateMarket("Test Market", AgentLevelEnum.Market)
             .WithDemandStrategy(TestDemandStrategy)
             .WithTradeProcessor(TestTradeProcessor)
             .WithTransactionManager(new BasicTransactionManager())
@@ -230,7 +230,7 @@ public partial class BasicTradeProcessorTests
     public void PCO_ThreeBuyersTwoSellersTwoGoods_allFill()
     {
         // Arrange
-        var Company3 = Company.Factory.Create("Company 3", CompanyLevelEnum.Beginner);
+        var Company3 = EconAgent.Factory.Create("Company 3", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(Company3);
 
         Company1.GetInventory().AddGood(new InventoryEntry(Lemonade, 100, 1m, Period));

@@ -10,9 +10,9 @@ public class SupplyAndDemandTests
 {
     int Period = 0;
     public Market TestMarket;
-    Company Company1;
-    Company Company2;
-    public PopulationCompany TestPopulation;
+    EconAgent Company1;
+    EconAgent Company2;
+    public PopulationAgent TestPopulation;
     public iStrategy TestReduceEnnuiStrategy;
 
     Good lemon;
@@ -61,7 +61,7 @@ public class SupplyAndDemandTests
             .Named("Reduce Ennui")
             .DescribedAs("Reduces ennui by 0.1")
             .Affecting(MetricEnum.Ennui)
-            .WithEffect(new MetricModifier<PopulationCompany>(
+            .WithEffect(new MetricModifier<PopulationAgent>(
                 c => c.Ennui,
                 (c, newValue) => c.Ennui = newValue))
             .WithEffectMagnitude(-0.4f);
@@ -73,7 +73,7 @@ public class SupplyAndDemandTests
         var existingMarket = TestEconomy.GetMarketByName("The First Market");
         TheEconomy.Instance.RemoveMarket(existingMarket);
         TestMarket = Market.Factory.CreateMarket("Supply and Demand Test Market"
-                                                , CompanyLevelEnum.Market)
+                                                , AgentLevelEnum.Market)
                                                 .WithDemandStrategy(TestDemandStrategy)
                                                 .WithTradeProcessor(new BasicTradeProcessor())
                                                 .WithTransactionManager(new BasicTransactionManager())
@@ -91,9 +91,9 @@ public class SupplyAndDemandTests
                 .Build();
 
         //Create a population company to use in tests
-        TestPopulation = CompanyBuilder.For<PopulationCompany>()
+        TestPopulation = EconAgentBuilder.For<PopulationAgent>()
             .Named("Test Population")
-            .AtLevel(CompanyLevelEnum.Market)
+            .AtLevel(AgentLevelEnum.Market)
             .WithInitialCash(10000)
             .WithBehaviourStrategy(TestReduceEnnuiStrategy)
             .WithEnnui(.99f)
@@ -101,8 +101,8 @@ public class SupplyAndDemandTests
             .Build();
 
         // Create companies
-        Company1 = Company.Factory.Create("Company1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company2", AgentLevelEnum.Beginner);
 
         //Register market participants
         TestMarket.RegisterMarketParticipant(TestPopulation);
@@ -279,7 +279,7 @@ public class SupplyAndDemandTests
         // Arrange
         var testMarket = TestMarket;
         var testPeriod = 0;
-        var company1 = Company.Factory.Create("Test Company 1", CompanyLevelEnum.Beginner);
+        var company1 = EconAgent.Factory.Create("Test Company 1", AgentLevelEnum.Beginner);
         company1.GetInventory().AddGood(new InventoryEntry(lemonade, 2000, 3.0m, 0));
         testMarket.RegisterMarketParticipant(company1);
 
@@ -305,7 +305,7 @@ public class SupplyAndDemandTests
     {
         throw new NotImplementedException("Update to use PopulationCompany.");
         // Arrange
-        var marketToTest = Market.Factory.CreateStarterMarket("Market To Test", CompanyLevelEnum.Market, TestDemandStrategy);
+        var marketToTest = Market.Factory.CreateStarterMarket("Market To Test", AgentLevelEnum.Market, TestDemandStrategy);
         marketToTest.InitializeDemandForSpecificGood(lemonade, 1000);
         var demographicManger = new MockDemographicManager();
         demographicManger.SetMarketInstability(1f);
@@ -315,7 +315,7 @@ public class SupplyAndDemandTests
         var currentLemonadePrice = lemonade.GetPrice();
         var price_increment_rate = lemonade.Get_price_increment_rate();
         var expectedLemonadePrice = Math.Round(currentLemonadePrice * (1 + price_increment_rate), 2);
-        var company = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         marketToTest.RegisterMarketParticipant(company);
         company.GetInventory().AddGood(new InventoryEntry(lemonade, 2000, 3.0m, 0));
 
@@ -340,7 +340,7 @@ public class SupplyAndDemandTests
         var demandForLemonade = new DemandData { MinDemand = 0, MaxDemand = 1000 };
         TestPopulation.SetDemand(lemonade, demandForLemonade);
         
-        var sellingCompany = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var sellingCompany = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         var expectedFulfillmentRate = 100f;
         
         var period = 0;
@@ -374,7 +374,7 @@ public class SupplyAndDemandTests
         // Arrange
         var demandForLemonade = new DemandData { MinDemand = 0, MaxDemand = 1000 };
         TestPopulation.SetDemand(lemonade, demandForLemonade);
-        var sellingCompany = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var sellingCompany = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(sellingCompany);
         //give the selling company some lemons
         sellingCompany.GetInventory().AddGood(new InventoryEntry(lemonade, 1000, 3.0m, 0));
@@ -405,7 +405,7 @@ public class SupplyAndDemandTests
         TestMarket.InitializeDemandForSpecificGood(lemon, 1000, 0, 1000, .8f);
 
         var expectedLemonDemand = 1000;
-        var sellingCompany = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var sellingCompany = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(sellingCompany);
         var period = 0;
 
@@ -434,7 +434,7 @@ public class SupplyAndDemandTests
         var initialLemonadeDemand = 1000;
         TestMarket.InitializeDemandForSpecificGood(lemonade, initialLemonadeDemand);
         var expectedLemonadeDemand = initialLemonadeDemand;
-        var sellingCompany = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var sellingCompany = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(sellingCompany);
 
         //give the selling company some lemonade
@@ -468,7 +468,7 @@ public class SupplyAndDemandTests
         TestMarket.SetCash(1000000);
         var initialLemonadeDemand = 900;
         TestMarket.InitializeDemandForSpecificGood(lemonade, initialLemonadeDemand);
-        var sellingCompany = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var sellingCompany = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(sellingCompany);
 
         //give the selling company some lemonade

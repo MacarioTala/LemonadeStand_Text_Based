@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DummyCompany : iCompany
+public class DummyCompany : iEconAgent
 {
     public string Name {get; set;}="Raw Materials Source";
     public decimal InfiniteCash => 10000000;

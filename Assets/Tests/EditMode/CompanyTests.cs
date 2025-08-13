@@ -9,7 +9,7 @@ public class CompanyTests
     TheEconomy TestEconomy;
     private TestHelpers testHelpers;
     Market TestMarket;
-    Company Company1;
+    EconAgent Company1;
     Good Lemonade;
     const int Period = 0;
 
@@ -20,10 +20,10 @@ public class CompanyTests
         TestEconomy = TheEconomy.Instance;
 
         testHelpers = new TestHelpers();
-        Company1 = Company.Factory.Create("Company1", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company1", AgentLevelEnum.Beginner);
         Lemonade = Good.CreateInstance("Lemonade", new PriceBand(1, 3), RarityEnum.Common);
         
-        TestMarket = Market.Factory.CreateStarterMarket("Test Market", CompanyLevelEnum.Market, new LinearDemandStrategy());
+        TestMarket = Market.Factory.CreateStarterMarket("Test Market", AgentLevelEnum.Market, new LinearDemandStrategy());
         TestMarket.RegisterMarketParticipant(Company1);
     }
 
@@ -31,7 +31,7 @@ public class CompanyTests
     public void Set_initial_cash_sets_cash_to_10000_for_beginner()
     {
         //arrange
-        var company = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         const float expected_cash = 10000;
         //Act
         //Assert
@@ -41,7 +41,7 @@ public class CompanyTests
     public void BuyGoodRemovesCashFromBuyer()
     {
         //arrange
-        var company = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         var good = Good.CreateInstance("Lemon", new PriceBand(1, 3), RarityEnum.Common);
         const decimal trade_price = 3.0m;
         var expected_cash = 10000 - 3;
@@ -58,7 +58,7 @@ public class CompanyTests
     {
         //arrange
         const int PeriodIsIrrelevant = 0;
-        var company = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         var good = Good.CreateInstance("Lemon", new PriceBand(1, 3), RarityEnum.Common);
         const decimal trade_price = 3.0m;
         var expected_inventory_entry = new InventoryEntry(good, 1, trade_price, PeriodIsIrrelevant);
@@ -79,19 +79,19 @@ public class CompanyTests
     public void Buy_good_when_buyer_doesnt_have_enough_cash_throws_exception()
     {
         //arrange
-        var company = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         var good = Good.CreateInstance("Lemon", new PriceBand(1, 3), RarityEnum.Common);
         const decimal trade_price = 3.0m;
         const int trade_quantity = 10000;
         //Act
         //Assert
-        Assert.Throws<Company_InsufficientFundsException>(() => company.BuyGood(good, trade_quantity, trade_price));
+        Assert.Throws<InsufficientFundsException>(() => company.BuyGood(good, trade_quantity, trade_price));
     }
     [Test]
     public void Sell_good_when_seller_has_good_in_inventory_adds_cash_to_seller()
     {
         //arrange
-        var company = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         var good = Good.CreateInstance("Lemon", new PriceBand(1, 3), RarityEnum.Common);
         company.BuyGood(good, 1,good.GetPrice());
         var initial_cash = company.GetCash();
@@ -109,20 +109,20 @@ public class CompanyTests
     public void Sell_good_throws_exception_when_not_enough_quantity()
     {
         //arrange
-        var company = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         var good = Good.CreateInstance("Lemon", new PriceBand(1, 3), RarityEnum.Common);
         company.BuyGood(good, 1,good.GetPrice());
         var good_price = 3.0m;
         //Act
         //Assert
-        Assert.Throws<Company_InventoryException>(() => company.SellGood(good, 2, good_price));
+        Assert.Throws<InventoryException>(() => company.SellGood(good, 2, good_price));
     }
 
     [Test]
     public void QueueTradeReturnsFailureWhenActionContextDoesNotContainTrade()
     {
         //Assert
-        var company1 = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var company1 = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         var lemon = Good.CreateInstance("Lemon", new PriceBand(1, 3), RarityEnum.Common);
         var context = new ActionContext{BidToSubmit = 2.0m, AskToSubmit = 3.0m, GoodToSubmit = lemon};
 

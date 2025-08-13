@@ -89,15 +89,15 @@ public class GoodTests
     public void ApplyingEnnuiReducingGoodEffectReducesEnnui()
     {
         // Arrange
-        var company = CompanyBuilder.For<PopulationCompany>()
+        var company = EconAgentBuilder.For<PopulationAgent>()
             .Named("Test Company")
             .WithEnnui(.99f)
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .Build();
         var goodEffect = GoodEffectBuilder.Create()
             .Named("Ennui Reducer")
             .DescribedAs("Reduces ennui by 0.1")
-            .WithEffect(new MetricModifier<PopulationCompany>(
+            .WithEffect(new MetricModifier<PopulationAgent>(
                 c => c.Ennui,
                 (c, newValue) => c.Ennui = newValue))
             .WithEffectMagnitude(-0.1f);

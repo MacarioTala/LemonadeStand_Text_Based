@@ -38,7 +38,7 @@ public partial class BasicTradeProcessorTests
     public void FindCounterPartiesForOrderReturnsSellOrderIfBuyOrderIsPrimary_TwoCounterParties()
     {
         // Arrange
-        var Company3 = Company.Factory.Create("Company 3", CompanyLevelEnum.Beginner);
+        var Company3 = EconAgent.Factory.Create("Company 3", AgentLevelEnum.Beginner);
         Company2.GetInventory().AddGood(new InventoryEntry(RadioactiveLemonade, 11, 10m, Period));
         Company3.GetInventory().AddGood(new InventoryEntry(RadioactiveLemonade, 10, 10m, Period));
         

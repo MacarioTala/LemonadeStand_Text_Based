@@ -50,7 +50,7 @@ public partial class BasicTradeProcessorTests
     public void EBTG_OneBuyerMultSellerBothSellersFill_4ExecutionsRecorded()
     {
         //Arrange
-        var Company3 = Company.Factory.Create("Company 3", CompanyLevelEnum.Beginner);
+        var Company3 = EconAgent.Factory.Create("Company 3", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(Company3);
         Company2.GetInventory().AddGood(new InventoryEntry(Lemonade, 3,9m,Period));
         Company3.GetInventory().AddGood(new InventoryEntry(Lemonade, 2,9m,Period));
@@ -101,7 +101,7 @@ public partial class BasicTradeProcessorTests
     public void EBTFG_OneBuyerMultSellerOneSellerFills()
     {
         //Arrange
-        var Company3 = Company.Factory.Create("Company 3", CompanyLevelEnum.Beginner);
+        var Company3 = EconAgent.Factory.Create("Company 3", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(Company3);
         Company2.GetInventory().AddGood(new InventoryEntry(Lemonade, 5,9m,Period));
         Company3.GetInventory().AddGood(new InventoryEntry(Lemonade, 2,10m,Period));

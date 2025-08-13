@@ -8,9 +8,9 @@ public class BasicDemandStrategyTests
 {
     TheEconomy TestEconomy;
     Market TestMarket;
-    PopulationCompany TestPopulation;
-    Company Company1;
-    Company Company2;
+    PopulationAgent TestPopulation;
+    EconAgent Company1;
+    EconAgent Company2;
     const int Period = 0;
 
     iDemandStrategy TestDemandStrategy;
@@ -42,23 +42,23 @@ public class BasicDemandStrategyTests
             .DescribedAs("Lemonade reduces ennui")
             .Affecting(MetricEnum.Ennui)
             .WithEffectMagnitude(-.1f)
-            .WithEffect(new MetricModifier<PopulationCompany>(
+            .WithEffect(new MetricModifier<PopulationAgent>(
                            c => c.Ennui,
                            (c, newValue) => c.Ennui = newValue));
         lemonade.AddEffect(reduceEnnuiEffect);
 
-        TestMarket = Market.Factory.CreateMarket("Test Market", CompanyLevelEnum.Market)
+        TestMarket = Market.Factory.CreateMarket("Test Market", AgentLevelEnum.Market)
             .WithDemandStrategy(TestDemandStrategy)
             .WithTradeProcessor(new BasicTradeProcessor())
             .WithTransactionManager(new BasicTransactionManager())
             .WithDemographicManager(new MockDemographicManager());
         
-        Company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company 2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company 2", AgentLevelEnum.Beginner);
 
-        TestPopulation = CompanyBuilder.For<PopulationCompany>()
+        TestPopulation = EconAgentBuilder.For<PopulationAgent>()
             .Named("Test Population")
-            .AtLevel(CompanyLevelEnum.Market)
+            .AtLevel(AgentLevelEnum.Market)
             .WithPopulation(1000)
             .WithBehaviourStrategy(TestReduceEnnuiStrategy)
             .WithInitialCash(10000)

@@ -11,9 +11,9 @@ public partial class LinearDemandStrategyTests
     TheEconomy TestEconomy;
     Good Lemonade;
     Market TestMarket;
-    Company Company1;
-    Company Company2;
-    PopulationCompany TestPopulation;
+    EconAgent Company1;
+    EconAgent Company2;
+    PopulationAgent TestPopulation;
     iStrategy TestReduceEnnuiStrategy;
 
     MockMarketDataService TestMarketDataService;
@@ -44,7 +44,7 @@ public partial class LinearDemandStrategyTests
             .DescribedAs("Reduces ennui")
             .Affecting(MetricEnum.Ennui)
             .WithEffectMagnitude(-.40f)
-            .WithEffect(new MetricModifier<PopulationCompany>(
+            .WithEffect(new MetricModifier<PopulationAgent>(
                 c => c.Ennui,
                 (c, newValue) => c.Ennui = newValue));
 
@@ -57,9 +57,9 @@ public partial class LinearDemandStrategyTests
                                         .WithAggressionLevel(.55m)
                                         .Build();
         //Set up population
-        TestPopulation = CompanyBuilder.For<PopulationCompany>()
+        TestPopulation = EconAgentBuilder.For<PopulationAgent>()
                                         .Named("TestPopulation")
-                                        .AtLevel(CompanyLevelEnum.Market)
+                                        .AtLevel(AgentLevelEnum.Market)
                                         .WithInitialCash(10000)
                                         .WithBehaviourStrategy(TestReduceEnnuiStrategy)
                                         .WithEnnui(.99f)
@@ -69,7 +69,7 @@ public partial class LinearDemandStrategyTests
         TestReduceEnnuiStrategy.GenerateGoals(TestPopulation);
 
         TestMarket = Market.Factory.CreateStarterMarket("Starter Market",
-                                                        CompanyLevelEnum.Market,
+                                                        AgentLevelEnum.Market,
                                                         TestDemandStrategy);
         TestMarketDataService = new MockMarketDataService();
         TestDemographicManager = new MockDemographicManager();
@@ -78,8 +78,8 @@ public partial class LinearDemandStrategyTests
         TestMarket.SetSupplyProvider(TestSupplyProvider);
         TestSupplyProvider.Initialize(TestMarket);
 
-        Company1 = Company.Factory.Create("Company1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company2", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(Company1);
         TestMarket.RegisterMarketParticipant(Company2);
         TestMarket.RegisterMarketParticipant(TestPopulation);

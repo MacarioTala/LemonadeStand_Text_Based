@@ -9,9 +9,9 @@ public class DemandElasticityTests
 {
     TheEconomy TestEconomy;
     Market TestMarket;
-    Company Company1;
-    Company Company2;
-    PopulationCompany TestPopulation;
+    EconAgent Company1;
+    EconAgent Company2;
+    PopulationAgent TestPopulation;
     iStrategy TestReduceEnnuiStrategy;
 
     int Period = 0;
@@ -31,14 +31,14 @@ public class DemandElasticityTests
 
         TestDemographicManager = new MockDemographicManager();
         TestDemandStrategy = ScriptableObject.CreateInstance<LinearDemandStrategy>();
-        TestMarket = Market.Factory.CreateMarket("TestMarket", CompanyLevelEnum.Market)
+        TestMarket = Market.Factory.CreateMarket("TestMarket", AgentLevelEnum.Market)
             .WithTradeProcessor(new BasicTradeProcessor())
             .WithTransactionManager(new BasicTransactionManager())
             .WithDemandStrategy(TestDemandStrategy)
             .WithDemographicManager(TestDemographicManager);
             
-        Company1 = Company.Factory.Create("Company1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company2", AgentLevelEnum.Beginner);
 
         TestMarket.RegisterMarketParticipant(Company1);
         TestMarket.RegisterMarketParticipant(Company2);
@@ -55,16 +55,16 @@ public class DemandElasticityTests
     {
         throw new NotImplementedException("currently doesn't make sense till populations create bids");
         // Arrange
-        var Company1 = Company.Factory.Create("Company1", CompanyLevelEnum.Beginner);
+        var Company1 = EconAgent.Factory.Create("Company1", AgentLevelEnum.Beginner);
         Company1.SetCash(10000);
         Company1.GetInventory().AddGood(new InventoryEntry(water, 10000,1m,Period));
 
         var initialWaterDemand = 1000;
-        var testPopulation = CompanyBuilder.For<PopulationCompany>()
+        var testPopulation = EconAgentBuilder.For<PopulationAgent>()
                             .Named("Test Population")
                             .WithInitialCash(5000)
                             .AssumingNewGoodsCost(1)
-                            .AtLevel(CompanyLevelEnum.Beginner)
+                            .AtLevel(AgentLevelEnum.Beginner)
                             .Build();
         
 

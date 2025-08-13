@@ -34,7 +34,7 @@ public class TheEconomy : MonoBehaviour
         return _trade_logger?.GetAllTransactions(markets, period);
     }
     
-    public List<iCompany> companies = new();
+    public List<iEconAgent> companies = new();
 
     //The Initial Market is a company that is always present in the market.
     //It contains the initial goods that are available in the market
@@ -76,7 +76,7 @@ public class TheEconomy : MonoBehaviour
     {
         InitialMarket = Market.Factory.CreateStarterMarket(
                             "The First Market", 
-                            CompanyLevelEnum.Market, 
+                            AgentLevelEnum.Market, 
                             ScriptableObject.CreateInstance<LinearDemandStrategy>());
         RegisterCompany(InitialMarket);
     }
@@ -103,7 +103,7 @@ public class TheEconomy : MonoBehaviour
         _trade_logger?.SaveDailySummary(executedTrades);
     }
 
-    public void RegisterCompany(iCompany company)
+    public void RegisterCompany(iEconAgent company)
     {
         if(!companies.Any(x=>x.Name == company.Name))
         {
@@ -116,7 +116,7 @@ public class TheEconomy : MonoBehaviour
         
     }
 
-    public iCompany GetGlobalMarket() => InitialMarket;
+    public iEconAgent GetGlobalMarket() => InitialMarket;
     public void CreateInitialGoods(List<Good> goods)//move static data to DB in future
     {
         //Limits for good quantities
@@ -141,7 +141,7 @@ public class TheEconomy : MonoBehaviour
         //in the future, have a concept of rarity driving the initial price
         }
     }
-    public void HandleParticipantCollapse(Market market,Company collapsedEntity)
+    public void HandleParticipantCollapse(Market market,EconAgent collapsedEntity)
     {
         Debug.Log($"{collapsedEntity.Name} in {market.Name} has collapsed");
         ShowCollapseSummary(collapsedEntity);
@@ -155,7 +155,7 @@ public class TheEconomy : MonoBehaviour
     {
         throw new NotImplementedException();
     }
-    public void ShowCollapseSummary(Company bankruptCompany)
+    public void ShowCollapseSummary(EconAgent bankruptCompany)
     {
         Debug.Log($"{bankruptCompany.Name} has collapsed after {tradingPeriod} trading periods");
     }

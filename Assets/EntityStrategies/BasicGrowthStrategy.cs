@@ -7,7 +7,7 @@ public class BasicGrowthStrategy : iStrategy
     decimal _aggressionLevel = 0.2m;
     public decimal GetAggressionLevel() => _aggressionLevel;
 
-    public void GenerateGoals(iCompany company)
+    public void GenerateGoals(iEconAgent company)
     {
         var goals = new List<Goal>();
         var doubleCashGoal = new Goal("Double Initial Cash",
@@ -46,7 +46,7 @@ public class BasicGrowthStrategy : iStrategy
                 break;
             
             case ActionEnum.PublishBidAsk:
-                var publisher = (Company)context.SubmittingCompany;
+                var publisher = (EconAgent)context.SubmittingCompany;
                 publisher.SubmitBidAskSpreadToMarket(context);
                 break;
 
@@ -55,7 +55,7 @@ public class BasicGrowthStrategy : iStrategy
         }
     }
 
-    public void PerformStrategy(iCompany company)
+    public void PerformStrategy(iEconAgent company)
     {
         throw new System.NotImplementedException();
     }
@@ -66,7 +66,7 @@ public class BasicGrowthStrategy : iStrategy
         return LemonadeStandResultObject.Success();
     }
 
-    public LemonadeStandResultObject PublishBidAskSpreadsToMarket(iCompany company)
+    public LemonadeStandResultObject PublishBidAskSpreadsToMarket(iEconAgent company)
     {
         throw new System.NotImplementedException();
     }

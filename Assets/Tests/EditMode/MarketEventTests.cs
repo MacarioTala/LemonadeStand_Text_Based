@@ -11,8 +11,8 @@ public class MarketEventTests
     TheEconomy TestEconomy;
     Good Lemonade;
     Market TestMarket;
-    Company Company1;
-    Company Company2;
+    EconAgent Company1;
+    EconAgent Company2;
 
     MockMarketDataService TestMarketDataService;
 
@@ -44,7 +44,7 @@ public class MarketEventTests
         TestDemographicManager.SetPopulationHistoryHandler(new MockPopulationHistoryDataHandler());
 
         TestMarket = Market.Factory.CreateStarterMarket("Starter Market",
-                                                        CompanyLevelEnum.Market,
+                                                        AgentLevelEnum.Market,
                                                         Strategy)
                                     .WithDataService(TestMarketDataService)
                                     .WithDemographicManager(TestDemographicManager)
@@ -52,8 +52,8 @@ public class MarketEventTests
                                     ;
         TestSupplyProvider.Initialize(TestMarket);
 
-        Company1 = Company.Factory.Create("Company1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company2", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(Company1);
         TestMarket.RegisterMarketParticipant(Company2);
 
@@ -97,11 +97,11 @@ public class MarketEventTests
         //Arrange
         const int initialPopulation = 100;
         var expectedPopulation = 90;
-        var testPopulation = CompanyBuilder.For<PopulationCompany>()
+        var testPopulation = EconAgentBuilder.For<PopulationAgent>()
             .WithPopulation(initialPopulation)
             .WithFixedCostStrategy(new BasicFixedCostStrategy())
             .Named("Test Population")
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .Build();
 
         TestMarket.RegisterMarketParticipant(testPopulation);
@@ -119,11 +119,11 @@ public class MarketEventTests
     {
         //Arrange
         const int initialPopulation = 100;
-        var testPopulation = CompanyBuilder.For<PopulationCompany>()
+        var testPopulation = EconAgentBuilder.For<PopulationAgent>()
             .WithPopulation(initialPopulation)
             .WithFixedCostStrategy(new BasicFixedCostStrategy())
             .Named("Test Population")
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .Build();
         TestMarket.RegisterMarketParticipant(testPopulation);
         
@@ -144,11 +144,11 @@ public class MarketEventTests
     {
         //Arrange
         var initialPopulation = 100;
-        var testPopulation = CompanyBuilder.For<PopulationCompany>()
+        var testPopulation = EconAgentBuilder.For<PopulationAgent>()
             .WithPopulation(initialPopulation)
             .WithFixedCostStrategy(new BasicFixedCostStrategy())
             .Named("Test Population")
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .Build();
         TestMarket.RegisterMarketParticipant(testPopulation);
 
@@ -173,11 +173,11 @@ public class MarketEventTests
     {
         //Arrange
         const int initialPopulation = 100;
-        var testPopulation = CompanyBuilder.For<PopulationCompany>()
+        var testPopulation = EconAgentBuilder.For<PopulationAgent>()
             .WithPopulation(initialPopulation)
             .WithFixedCostStrategy(new BasicFixedCostStrategy())
             .Named("Test Population")
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .Build();
         TestMarket.RegisterMarketParticipant(testPopulation);
         var expectedPopulation = 81;
@@ -233,11 +233,11 @@ public class MarketEventTests
     {
         //Arrange
         const int initialPopulation = 100;
-        var testPopulation = CompanyBuilder.For<PopulationCompany>()
+        var testPopulation = EconAgentBuilder.For<PopulationAgent>()
             .WithPopulation(initialPopulation)
             .WithFixedCostStrategy(new BasicFixedCostStrategy())
             .Named("Test Population")
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .Build();
         TestMarket.RegisterMarketParticipant(testPopulation);
         var expectedPopulation = 90;

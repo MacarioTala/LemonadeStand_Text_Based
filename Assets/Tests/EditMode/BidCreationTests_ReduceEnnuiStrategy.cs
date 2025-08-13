@@ -18,7 +18,7 @@ public class BidCreationTests_ReduceEnnuiStrategy
 
     iStrategy TestReduceEnnuiStrategy;
 
-    PopulationCompany TestPopulation;
+    PopulationAgent TestPopulation;
 
     const decimal InitialCash=2000;
 
@@ -64,7 +64,7 @@ public class BidCreationTests_ReduceEnnuiStrategy
                             .Named("Reduce Ennui effect")
                             .Affecting(MetricEnum.Ennui)
                             .WithEffectMagnitude(-.05f)
-                            .WithEffect(new MetricModifier<PopulationCompany>
+                            .WithEffect(new MetricModifier<PopulationAgent>
                                             (
                                             x => x.Ennui,
                                             (x, newValue) => x.Ennui = newValue
@@ -77,7 +77,7 @@ public class BidCreationTests_ReduceEnnuiStrategy
                                 .WithAggressionLevel(.20m)
                                 .Build();
 
-        TestPopulation = CompanyBuilder.For<PopulationCompany>()
+        TestPopulation = EconAgentBuilder.For<PopulationAgent>()
                         .Named("Test Population")
                         .WithInitialCash(InitialCash)
                         .WithEnnui(initialEnnui)
@@ -87,7 +87,7 @@ public class BidCreationTests_ReduceEnnuiStrategy
                         .Build();
         TestReduceEnnuiStrategy.GenerateGoals(TestPopulation);
 
-        TestMarket = Market.Factory.CreateStarterMarket("Test Market", CompanyLevelEnum.Market, null);
+        TestMarket = Market.Factory.CreateStarterMarket("Test Market", AgentLevelEnum.Market, null);
 
         TestMarket.RegisterMarketParticipant(TestPopulation);
     }
@@ -195,7 +195,7 @@ public class BidCreationTests_ReduceEnnuiStrategy
     {
         //Arrange
         TestPopulation.Add_recipe(LemonadeRecipe);
-        var company1 = Company.Factory.Create("Company1", CompanyLevelEnum.Beginner);
+        var company1 = EconAgent.Factory.Create("Company1", AgentLevelEnum.Beginner);
 
         var prices = new Dictionary<Good, decimal>
                         {
@@ -247,7 +247,7 @@ public class BidCreationTests_ReduceEnnuiStrategy
     public void CalculateBidPerCapitaReturnsPerceivedCostOfGoodsWhenPricesExist()
     {
         //Arrange
-        var company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
+        var company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
 
         TestMarket.MarketData.Add(new MarketData { Company = company1, Good = Lemon, Ask = .3m });
         TestMarket.MarketData.Add(new MarketData { Company = company1, Good = Water, Ask = .1m });

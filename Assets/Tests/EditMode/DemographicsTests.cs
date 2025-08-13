@@ -12,12 +12,12 @@ public class DemographicsTests
         var demographicManager = new BasicDemographicManager();
 
         const int expectedPopulation = 1000;
-        var testPopulationCompany = CompanyBuilder.For<PopulationCompany>()
+        var testPopulationCompany = EconAgentBuilder.For<PopulationAgent>()
             .WithPopulation(expectedPopulation)
             .Named("Test Company")
             .Build();
         
-        var testMarket = Market.Factory.CreateStarterMarket("Test Market",CompanyLevelEnum.Market,testDemandStrategy)
+        var testMarket = Market.Factory.CreateStarterMarket("Test Market",AgentLevelEnum.Market,testDemandStrategy)
         .WithDemographicManager(demographicManager);
         
         testMarket.RegisterMarketParticipant(testPopulationCompany);

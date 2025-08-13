@@ -16,8 +16,8 @@ public class BasicConsumptionManagerTests
     iSupplyProvider TestSupplyProvider;
     const int Period = 0;
 
-    Company Company1;
-    Company Company2;
+    EconAgent Company1;
+    EconAgent Company2;
 
     Good lemon;
     Good water;
@@ -45,7 +45,7 @@ public class BasicConsumptionManagerTests
         TestMarketDataService = new MockMarketDataService();
         TestDemographicManager = new MockDemographicManager();
         TestSupplyProvider= new MockSupplyProvider();
-        TestMarket = Market.Factory.CreateMarket("Test Market", CompanyLevelEnum.Market)
+        TestMarket = Market.Factory.CreateMarket("Test Market", AgentLevelEnum.Market)
                             .WithDemandStrategy(TestDemandStrategy)
                             .WithTradeProcessor(new BasicTradeProcessor())
                             .WithTransactionManager(new BasicTransactionManager())
@@ -55,8 +55,8 @@ public class BasicConsumptionManagerTests
                             .WithDemographicManager(TestDemographicManager);
         TestMarket.InitializeDemandForSpecificGood(lemonade, 1000);
 
-        Company1 = Company.Factory.Create("Company1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company2", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(Company1);
         TestMarket.RegisterMarketParticipant(Company2);
     }

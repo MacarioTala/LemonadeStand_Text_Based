@@ -12,13 +12,13 @@ public partial class MarketTests
         var lemonsCompanyWillSellToMarket = 500;
         var currentPeriod = 0;
         var basicDemandStrategy = ScriptableObject.CreateInstance<LinearDemandStrategy>();
-        var convenienceMarket = Market.Factory.CreateMarket("Convenience Market", CompanyLevelEnum.Market)
+        var convenienceMarket = Market.Factory.CreateMarket("Convenience Market", AgentLevelEnum.Market)
             .WithDemandStrategy(basicDemandStrategy)
             .WithTradeProcessor(new BasicTradeProcessor())
             .WithTransactionManager(new BasicTransactionManager())
             ;
-        var companyA = Company.Factory.Create("CompanyA", CompanyLevelEnum.Beginner);
-        var companyB = Company.Factory.Create("CompanyB", CompanyLevelEnum.Beginner);
+        var companyA = EconAgent.Factory.Create("CompanyA", AgentLevelEnum.Beginner);
+        var companyB = EconAgent.Factory.Create("CompanyB", AgentLevelEnum.Beginner);
         var lemonSaleA = new Order(TestMarket, Company1, lemon, lemonsCompanyWillSellToMarket, 3.0m);
         var lemonSaleB = new Order(TestMarket, Company2, lemon, lemonsCompanyWillSellToMarket, 3.0m);
 

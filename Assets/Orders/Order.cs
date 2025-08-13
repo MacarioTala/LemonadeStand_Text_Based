@@ -4,9 +4,9 @@ using System.Collections.Generic;
 public class Order
 {
     public Guid Id {get;private set;} = Guid.NewGuid();
-    public iCompany SubmittingCompany;
-    public iCompany Buyer;
-    public iCompany Seller;
+    public iEconAgent SubmittingCompany;
+    public iEconAgent Buyer;
+    public iEconAgent Seller;
     public Good Good;
     public int Quantity;
     public int FilledQuantity=0;
@@ -41,7 +41,7 @@ public class Order
         return LemonadeStandResultObject.Success();
     }
 
-    public Order(iCompany buyer, iCompany seller, Good good, int quantity, decimal price)
+    public Order(iEconAgent buyer, iEconAgent seller, Good good, int quantity, decimal price)
     {
         Buyer = buyer;
         Seller = seller;

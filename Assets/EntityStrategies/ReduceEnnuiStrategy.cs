@@ -19,20 +19,20 @@ public class ReduceEnnuiStrategy : iStrategy
         return LemonadeStandResultObject.Success();
     }
 #region Goals
-    public void GenerateGoals(iCompany company)
+    public void GenerateGoals(iEconAgent company)
     {
         var ennuiGoal = new Goal()
                 .Named("Reduce Ennui")
                 .DescribedAs("Reduce the ennui of the population to 0")
-                .WithGoalEvaluator(c => c is PopulationCompany populationCompany && populationCompany.Ennui == 0)
-                .WithGoalInitializer((c, g) => g.SetOriginalValue("Ennui", ((PopulationCompany)c).Ennui))
+                .WithGoalEvaluator(c => c is PopulationAgent populationCompany && populationCompany.Ennui == 0)
+                .WithGoalInitializer((c, g) => g.SetOriginalValue("Ennui", ((PopulationAgent)c).Ennui))
                 .Affecting(MetricEnum.Ennui)
                 .WithGoalValue(0f);
         
         AddGoal(ennuiGoal, company);
     }
 
-    public void AddGoal(Goal goal, iCompany company)
+    public void AddGoal(Goal goal, iEconAgent company)
     {
         if (company.Goals.Contains(goal))
         {
@@ -40,7 +40,7 @@ public class ReduceEnnuiStrategy : iStrategy
         }
         company.Goals.Add(goal);
     }
-    public void RemoveGoals(string goalName, iCompany company)
+    public void RemoveGoals(string goalName, iEconAgent company)
     {
         var goal = company.Goals.Find(g => g.Name == goalName);
         if (goal != null)
@@ -49,20 +49,20 @@ public class ReduceEnnuiStrategy : iStrategy
         }
     }
 
-    private static bool GoalNotMet(Goal goal, iCompany company) =>
+    private static bool GoalNotMet(Goal goal, iEconAgent company) =>
     !(goal?.IsGoalMet(company) ?? false);
 
     #endregion
     #region Strategy Execution
-    public void PerformStrategy(iCompany company)
+    public void PerformStrategy(iEconAgent company)
     {
         var ennuiGoal = company.Goals.Find(g => g.Name == "Reduce Ennui");
-        if (GoalNotMet(ennuiGoal, company) && company is PopulationCompany populationCompany)
+        if (GoalNotMet(ennuiGoal, company) && company is PopulationAgent populationCompany)
         {
             PerformStrategicActions(populationCompany);
         }
     }
-    private void PerformStrategicActions(PopulationCompany company)
+    private void PerformStrategicActions(PopulationAgent company)
     {
         var market = company.GetMarket();
         var marketSpreads = market.GetBidAskSpreadsFromMarket();
@@ -72,7 +72,7 @@ public class ReduceEnnuiStrategy : iStrategy
             company.QueueOrder(action);
         }
     }
-     private void AllocateBudget(iCompany company)
+     private void AllocateBudget(iEconAgent company)
     {
         var aggressionLevel = company.GetAggressionLevel();
         var totalCash = company.GetCash()*aggressionLevel;
@@ -101,7 +101,7 @@ public class ReduceEnnuiStrategy : iStrategy
         }
     }
     
-    internal IEnumerable<ActionContext> CreateBuys(Company company)
+    internal IEnumerable<ActionContext> CreateBuys(EconAgent company)
     {
         var actions = new List<ActionContext>();
         foreach(var spread in _bidAskSpreads)
@@ -112,7 +112,7 @@ public class ReduceEnnuiStrategy : iStrategy
             var bid = Math.Max(spread.Value.Bid, company.GetMinimumBid());
             var aggressionLevel = company.GetAggressionLevel();
             var cash = company.GetCash()*aggressionLevel;
-            var populationCompany = company as PopulationCompany;
+            var populationCompany = company as PopulationAgent;
             var maxDemandForGood = populationCompany.GetDemandFor(good).MaxDemand;
 
             //prioritize goods to bid for
@@ -139,9 +139,9 @@ public class ReduceEnnuiStrategy : iStrategy
     public Dictionary<Good, BidAskSpread> GetBidAskSpreads()
                         => new(_bidAskSpreads);
     
-    internal Dictionary<Good,BidAskSpread> GenerateBidAskSpreads(iCompany company)
+    internal Dictionary<Good,BidAskSpread> GenerateBidAskSpreads(iEconAgent company)
     {
-        if (company is PopulationCompany populationCompany)
+        if (company is PopulationAgent populationCompany)
         {
             var demand = populationCompany.GetDemand()
                 .Where(
@@ -169,7 +169,7 @@ public class ReduceEnnuiStrategy : iStrategy
     }
 
     internal BidAskSpread CalculateBidPerCapita(Good good,
-                                                PopulationCompany populationCompany,
+                                                PopulationAgent populationCompany,
                                                 Goal goal)
     {
         //Ability

@@ -13,8 +13,8 @@ public class BasicTransactionManagerTests
     Market TestMarket;
     int Period;
 
-    Company Company1;
-    Company Company2;
+    EconAgent Company1;
+    EconAgent Company2;
     readonly PriceBand PriceBand1 = new(.5m, 1.0m);
     readonly PriceBand PriceBand2 = new(5.0m, 10m);
 
@@ -26,14 +26,14 @@ public class BasicTransactionManagerTests
         TheEconomy.SetupForTests(new MockLogger());
         TestEconomy = TheEconomy.Instance;
 
-        TestMarket = Market.Factory.CreateMarket("Test Market", CompanyLevelEnum.Market)
+        TestMarket = Market.Factory.CreateMarket("Test Market", AgentLevelEnum.Market)
             .WithDemandStrategy(TestDemandStrategy)
             .WithTradeProcessor(new BasicTradeProcessor())
             .WithTransactionManager(new BasicTransactionManager())
             .WithDemographicManager(new BasicDemographicManager())
             .WithCash(10000);
-        Company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company 2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company 2", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(Company1);
         TestMarket.RegisterMarketParticipant(Company2);
 
@@ -259,7 +259,7 @@ public class BasicTransactionManagerTests
     {
         //Arrange
         var basicTransactionManager = new BasicTransactionManager();
-        var Company3 = Company.Factory.Create("Company 3",CompanyLevelEnum.Beginner);
+        var Company3 = EconAgent.Factory.Create("Company 3",AgentLevelEnum.Beginner);
         
         Company2.GetInventory().AddGood(new InventoryEntry(Lemon, 1, 1m, 1));
         Company3.GetInventory().AddGood(new InventoryEntry(Lemon, 1, 1m, 1));

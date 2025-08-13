@@ -7,8 +7,8 @@ public class Execution
     public Order RecordedTrade{get; private set;}
     public List<Order> CounterPartyTrades{get; private set;} = new List<Order>();
     public int Period{get; private set;}
-    public iCompany Buyer;
-    public iCompany Seller;
+    public iEconAgent Buyer;
+    public iEconAgent Seller;
     public int Quantity;
     public TradeType TradeType;
     public decimal Price;
@@ -20,8 +20,8 @@ public class Execution
     }
 
     public Execution(   Order order, 
-                        iCompany buyer, 
-                        iCompany seller, 
+                        iEconAgent buyer, 
+                        iEconAgent seller, 
                         int quantity, 
                         decimal price,
                         int period)

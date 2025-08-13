@@ -10,7 +10,7 @@ public class GoalTests
     public void GenerateGoals_creates_double_cash_goal_for_company_with_BasicGrowthStrategy()
     {
         //arrange
-        var company = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner, new BasicGrowthStrategy());
+        var company = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner, new BasicGrowthStrategy());
         company.GetStrategy().GenerateGoals(company);
         var expected_goal = new Goal("Double Initial Cash",
                                       "Double the initial cash of the company",
@@ -28,9 +28,9 @@ public class GoalTests
     {
         //arrange
         var company = 
-                      CompanyBuilder.For<Company>()
+                      EconAgentBuilder.For<EconAgent>()
                     .WithBehaviourStrategy(new BasicGrowthStrategy())
-                    .AtLevel(CompanyLevelEnum.Beginner)
+                    .AtLevel(AgentLevelEnum.Beginner)
                     .Named("Test Company")
                     .Build();
 
@@ -53,9 +53,9 @@ public class GoalTests
     public void GenerateGoalsCreatesReduceEnnuiGoalForReduceEnnuiStrategy()
     {
         // Arrange
-        var company = PopulationCompany.PopulationCompanyBuilder.Create()
+        var company = PopulationAgent.PopulationAgentBuilder.Create()
             .Named("Population")
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .WithInitialCash(1000)
             .WithBehaviourStrategy(new ReduceEnnuiStrategy())
             .Build();
@@ -77,12 +77,12 @@ public class GoalTests
         var ReduceEnnuiGoal = new Goal()
             .Named("Reduce Ennui")
             .DescribedAs("Reduce the ennui of the population to 0")
-            .WithGoalEvaluator(c => c is PopulationCompany populationCompany && populationCompany.Ennui == 0)
+            .WithGoalEvaluator(c => c is PopulationAgent populationCompany && populationCompany.Ennui == 0)
             .WithGoalInitializer((c, g) => g.SetOriginalValue("Ennui", initialEnnui));
 
-        var company = PopulationCompany.PopulationCompanyBuilder.Create()
+        var company = PopulationAgent.PopulationAgentBuilder.Create()
             .Named("Population")
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .WithInitialCash(1000)
             .WithGoal(ReduceEnnuiGoal)
             .Build();

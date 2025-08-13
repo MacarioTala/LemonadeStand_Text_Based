@@ -10,7 +10,7 @@ public class PopulationTests
     Good apple;
     Good water;
     Good sugar;
-    PopulationCompany TestPopulation;
+    PopulationAgent TestPopulation;
 
     readonly int initialPopulation = 1000;
 
@@ -35,10 +35,10 @@ public class PopulationTests
                 .WithRarity(RarityEnum.Common)
                 .Build();
 
-        TestPopulation = CompanyBuilder.For<PopulationCompany>()
+        TestPopulation = EconAgentBuilder.For<PopulationAgent>()
                     .Named("TestPopulation")
                     .WithPopulation(initialPopulation)
-                    .AtLevel(CompanyLevelEnum.Market)
+                    .AtLevel(AgentLevelEnum.Market)
                     .WithEnnui(.99f)
                     .Build();
     }
@@ -77,9 +77,9 @@ public class PopulationTests
             { lemon, lemonDemandData }
         };
 
-        var population = CompanyBuilder.For<PopulationCompany>()
+        var population = EconAgentBuilder.For<PopulationAgent>()
             .Named("Test Company")
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .WithPopulation(100)
             .WithInventory(inventory)
             .Demanding(demandDictionary)
@@ -124,18 +124,18 @@ public class PopulationTests
         var inventory2 = new Inventory();
         inventory2.AddGood(new InventoryEntry(lemon, initialLemonCount, 1m, 0));
 
-        var population1 = CompanyBuilder.For<PopulationCompany>()
+        var population1 = EconAgentBuilder.For<PopulationAgent>()
             .Named("Test Company")
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .WithPopulation(100)
             .WithInventory(inventory1)
             .WithEnnui(.99f)
             .Demanding(demandDictionary)
             .Build();
 
-        var population2 = CompanyBuilder.For<PopulationCompany>()
+        var population2 = EconAgentBuilder.For<PopulationAgent>()
             .Named("Test Company")
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .WithPopulation(200)
             .WithInventory(inventory2)
             .WithEnnui(.99f)
@@ -187,7 +187,7 @@ public class PopulationTests
     public void TestThatGoodEffectsAreAppliedByMarkets()
     {
         //Arrange
-        var testMarket = Market.Factory.CreateStarterMarket("Test Market", CompanyLevelEnum.Market, null)
+        var testMarket = Market.Factory.CreateStarterMarket("Test Market", AgentLevelEnum.Market, null)
                         .WithSupplyProvider(new MockSupplyProvider())
                         .WithDemographicManager(new MockDemographicManager())
                         ;
@@ -196,7 +196,7 @@ public class PopulationTests
                                 .Named("Ennui Reducer")
                                 .DescribedAs("Reduces Ennui by 10%")
                                 .WithEffect(
-                                    new MetricModifier<PopulationCompany>
+                                    new MetricModifier<PopulationAgent>
                                     (
                                         x => x.Ennui,
                                         (x, newValue) => x.Ennui = newValue
@@ -233,7 +233,7 @@ public class PopulationTests
     public void ConsumingFewerGoodsThanIdealHasReducedEffect()
     {
          //Arrange
-        var testMarket = Market.Factory.CreateStarterMarket("Test Market", CompanyLevelEnum.Market, null)
+        var testMarket = Market.Factory.CreateStarterMarket("Test Market", AgentLevelEnum.Market, null)
                         .WithSupplyProvider(new MockSupplyProvider())
                         .WithDemographicManager(new MockDemographicManager())
                         ;
@@ -242,7 +242,7 @@ public class PopulationTests
                                 .Named("Ennui Reducer")
                                 .DescribedAs("Reduces Ennui by 10%")
                                 .WithEffect(
-                                    new MetricModifier<PopulationCompany>
+                                    new MetricModifier<PopulationAgent>
                                     (
                                         x => x.Ennui,
                                         (x, newValue) => x.Ennui = newValue

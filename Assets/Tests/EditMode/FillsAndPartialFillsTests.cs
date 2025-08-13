@@ -10,8 +10,8 @@ public class FillsAndPartialFillsTests
     TheEconomy testEconomy;
     Market TestMarket;
 
-    Company TestCompany1;
-    Company TestCompany2;
+    EconAgent TestCompany1;
+    EconAgent TestCompany2;
 
     Good Lemon;
     Good Water;
@@ -25,14 +25,14 @@ public class FillsAndPartialFillsTests
         TheEconomy.SetupForTests(new MockLogger());
         testEconomy = TheEconomy.Instance;
 
-        TestMarket = Market.Factory.CreateMarket("TestMarket", CompanyLevelEnum.Market)
+        TestMarket = Market.Factory.CreateMarket("TestMarket", AgentLevelEnum.Market)
             .WithDemandStrategy(ScriptableObject.CreateInstance<LinearDemandStrategy>())
             .WithSupplyProvider(new BasicSupplyProvider())
             .WithTradeProcessor(new BasicTradeProcessor())
             .WithTransactionManager(new BasicTransactionManager());
 
-        TestCompany1 = Company.Factory.Create("TestCompany1", CompanyLevelEnum.Beginner);
-        TestCompany2 = Company.Factory.Create("TestCompany2", CompanyLevelEnum.Beginner);
+        TestCompany1 = EconAgent.Factory.Create("TestCompany1", AgentLevelEnum.Beginner);
+        TestCompany2 = EconAgent.Factory.Create("TestCompany2", AgentLevelEnum.Beginner);
 
         TestMarket.RegisterMarketParticipant(TestCompany1);
         TestMarket.RegisterMarketParticipant(TestCompany2);

@@ -15,7 +15,7 @@ public interface iDemographicManager
     iDemographicManager SetPopulationHistoryHandler(iDataHandler<PopulationHistory> handler);
 
     LemonadeStandResultObject SetMarketInstability(float newInstability); 
-    LemonadeStandResultObject SetPopulation(int newPopulation, PopulationCompany marketParticipant);
+    LemonadeStandResultObject SetPopulation(int newPopulation, PopulationAgent marketParticipant);
     LemonadeStandResultObject SetPopulationHappiness(float newHappiness);
 
     //Demographics History

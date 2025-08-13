@@ -33,7 +33,7 @@ public class BasicDemographicManager : iDemographicManager
         var economicActors = _market.GetMarketParticipants();
         // Sum the population of all population companies
         _population = economicActors
-            .OfType<PopulationCompany>()
+            .OfType<PopulationAgent>()
             .Sum(company => company.Population);
         return _population;
     }
@@ -84,7 +84,7 @@ public class BasicDemographicManager : iDemographicManager
         return LemonadeStandResultObject.Success();
     }
 
-    public LemonadeStandResultObject SetPopulation(int newPopulation , PopulationCompany marketParticipant)
+    public LemonadeStandResultObject SetPopulation(int newPopulation , PopulationAgent marketParticipant)
     {
         marketParticipant.Population = newPopulation;
         return LemonadeStandResultObject.Success();

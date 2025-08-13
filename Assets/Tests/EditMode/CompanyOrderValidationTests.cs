@@ -12,7 +12,7 @@ public class CompanyOrderValidationTests
     {
         TestDemandStrategy = ScriptableObject.CreateInstance<LinearDemandStrategy>();
         Lemon = Good.CreateInstance("Lemon", new PriceBand(1, 3), RarityEnum.Common);
-        TestMarket = Market.Factory.CreateMarket("Test Market", CompanyLevelEnum.Market)
+        TestMarket = Market.Factory.CreateMarket("Test Market", AgentLevelEnum.Market)
             .WithTradeProcessor(new BasicTradeProcessor())
             .WithTransactionManager(new BasicTransactionManager())
             .WithDemographicManager(new BasicDemographicManager())
@@ -31,7 +31,7 @@ public class CompanyOrderValidationTests
     public void CompanyQueueOrderReturnsFailureIfOrderWouldResultInNegativeCashBalance()
     {
         // Arrange
-        var company = Company.Factory.Create("Test Company", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Test Company", AgentLevelEnum.Beginner);
         var order = new Order(company, TestMarket, Lemon, 10000, 10m);
         var context = new ActionContext
         {

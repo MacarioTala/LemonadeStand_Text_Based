@@ -12,7 +12,7 @@ public class TextBasedStoryHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ActionPointsText;
     public static TextBasedStoryHandler Instance { get; private set; }
 #region Game Variables
-    private Company PlayerCompany;
+    private EconAgent PlayerCompany;
     private bool isWaitingForPlayerInput = false;
     private Market initialMarket;
     private int playerActionsRemaining;
@@ -104,7 +104,7 @@ public class TextBasedStoryHandler : MonoBehaviour
     }
     private void InitializePlayer()
     {
-        PlayerCompany= Company.Factory.Create("Player1",CompanyLevelEnum.Beginner);
+        PlayerCompany= EconAgent.Factory.Create("Player1",AgentLevelEnum.Beginner);
         PlayerCompany.IsPlayer= true;
         playerActionsRemaining = PlayerCompany.GetActionsRemaining();
         initialMarket.RegisterMarketParticipant(PlayerCompany);

@@ -77,7 +77,7 @@ public class TheEconomyTests
     public void Register_Company_adds_company_to_companies_list_if_no_companies_are_registered()
     {
         // Arrange
-        var company = ScriptableObject.CreateInstance<Company>();
+        var company = ScriptableObject.CreateInstance<EconAgent>();
         company.Name = "Test Company";
         var expected = testEconomy.companies.Count + 1;
         // Act
@@ -91,10 +91,10 @@ public class TheEconomyTests
     public void Register_Company_does_not_add_company_to_companies_list_if_company_already_registered()
     {
         // Arrange
-        var company = ScriptableObject.CreateInstance<Company>();
+        var company = ScriptableObject.CreateInstance<EconAgent>();
         company.Name = "Test Company";
         testEconomy.RegisterCompany(company);
-        var company2 = ScriptableObject.CreateInstance<Company>();
+        var company2 = ScriptableObject.CreateInstance<EconAgent>();
         company2.Name = "Test Company";
         // Act
         // Assert

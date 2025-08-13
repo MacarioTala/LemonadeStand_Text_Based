@@ -1,6 +1,6 @@
 
 #region enums
-public enum CompanyLevelEnum
+public enum AgentLevelEnum
 {
     Beginner,
     Intermediate,

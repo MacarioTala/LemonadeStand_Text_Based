@@ -26,10 +26,10 @@ public partial class LinearDemandStrategyTests
                 {
                     {Lemonade, lemonadeDemand}
                 };
-        var population = CompanyBuilder.For<PopulationCompany>()
+        var population = EconAgentBuilder.For<PopulationAgent>()
             .Named("Population Company")
             .WithInitialCash(10000)
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .WithPopulation(initialPopulation)
             .WithBehaviourStrategy(strategy)
             .WithEnnui(.99f)

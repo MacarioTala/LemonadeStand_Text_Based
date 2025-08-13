@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-public class Company : ScriptableObject, iCompany, iMarketParticipant
+public class EconAgent : ScriptableObject, iEconAgent, iMarketParticipant
 {
 #region Identity and Initialization
     //Fields to get around Unity's limitation of not having automatic backing properties.
@@ -12,7 +11,7 @@ public class Company : ScriptableObject, iCompany, iMarketParticipant
         get => _company_name;
         set => _company_name = value;
     }
-    public CompanyLevelEnum companyLevel;
+    public AgentLevelEnum companyLevel;
     public bool IsBankrupt() => cash <= 0;
 
     public bool IsPlayer { get; set; } = false;
@@ -32,8 +31,8 @@ public class Company : ScriptableObject, iCompany, iMarketParticipant
         marketCompanyIsIn = null;
         return LemonadeStandResultObject.Success();
     }
-    protected Company() { }
-    internal void Initialize (string companyName, CompanyLevelEnum company_level,iStrategy strategy=null)
+    protected EconAgent() { }
+    internal void Initialize (string companyName, AgentLevelEnum company_level,iStrategy strategy=null)
     {
         Name = companyName;
         companyLevel = company_level;
@@ -47,23 +46,23 @@ public class Company : ScriptableObject, iCompany, iMarketParticipant
     public static class Factory
     {
         //default constructor -- Basic Fixed Cost Strategy and no AI Strategy. Use for players
-        public static Company Create(string companyName, CompanyLevelEnum company_level,iStrategy strategy=null)
+        public static EconAgent Create(string companyName, AgentLevelEnum company_level,iStrategy strategy=null)
         {
-            var company = CreateInstance<Company>();
+            var company = CreateInstance<EconAgent>();
             company.Initialize(companyName, company_level, strategy);
             company.FixedCostStrategy = new BasicFixedCostStrategy();
             return company;
         }
 
-        public static Company Create(string companyName, CompanyLevelEnum company_level, iStrategy strategy, iFixedCostStrategy fixedCostStrategy)
+        public static EconAgent Create(string companyName, AgentLevelEnum company_level, iStrategy strategy, iFixedCostStrategy fixedCostStrategy)
         {
-            var company = CreateInstance<Company>();
+            var company = CreateInstance<EconAgent>();
             company.Initialize(companyName, company_level, strategy);
             company.FixedCostStrategy = fixedCostStrategy;
             return company;
         }
 
-        public static T Create<T>() where T : Company
+        public static T Create<T>() where T : EconAgent
         {
             var company = CreateInstance<T>();
             return company;
@@ -83,16 +82,16 @@ public class Company : ScriptableObject, iCompany, iMarketParticipant
     {
         switch(companyLevel)
         {
-            case CompanyLevelEnum.Beginner:
+            case AgentLevelEnum.Beginner:
                 actionsPerCycle = 3;
                 break;
-            case CompanyLevelEnum.Intermediate:
+            case AgentLevelEnum.Intermediate:
                 actionsPerCycle = 2;
                 break;
-            case CompanyLevelEnum.Advanced:
+            case AgentLevelEnum.Advanced:
                 actionsPerCycle = 1;
                 break;
-            case CompanyLevelEnum.Market:
+            case AgentLevelEnum.Market:
                 actionsPerCycle = 1000;
                 break;
         }
@@ -149,16 +148,16 @@ public class Company : ScriptableObject, iCompany, iMarketParticipant
         {
             switch(companyLevel)
             {
-                case CompanyLevelEnum.Beginner:
+                case AgentLevelEnum.Beginner:
                     cash = 10000;
                     break;
-                case CompanyLevelEnum.Intermediate:
+                case AgentLevelEnum.Intermediate:
                     cash = 5000;
                     break;
-                case CompanyLevelEnum.Advanced:
+                case AgentLevelEnum.Advanced:
                     cash = 1000;
                     break;  
-                case CompanyLevelEnum.Market:
+                case AgentLevelEnum.Market:
                     cash = 1000000000000;
                     break;
             }
@@ -283,7 +282,7 @@ public class Company : ScriptableObject, iCompany, iMarketParticipant
         }
         else
         {
-            throw new Company_InsufficientFundsException("Insufficient funds to buy good");
+            throw new InsufficientFundsException("Insufficient funds to buy good");
         }
     }
 
@@ -312,7 +311,7 @@ public class Company : ScriptableObject, iCompany, iMarketParticipant
         }
         else
         {
-            throw new Company_InventoryException("Company does not have enough of the good to sell");
+            throw new InventoryException("Company does not have enough of the good to sell");
         }
     }
 #endregion
@@ -390,7 +389,7 @@ public class Company : ScriptableObject, iCompany, iMarketParticipant
 
     public override bool Equals(object other)
     {
-        if(other is Company company)
+        if(other is EconAgent company)
         {
             return Name == company.Name;
         }

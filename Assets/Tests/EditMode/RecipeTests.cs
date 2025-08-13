@@ -208,8 +208,8 @@ public class RecipeTests
     public void MakingRecipeSetsRecipeOnProducedInventoryEntry()
     {
         //Arrange
-        var TestCompany = Company.Factory.Create(companyName: "TestCompany", 
-                                                 company_level: CompanyLevelEnum.Beginner, 
+        var TestCompany = EconAgent.Factory.Create(companyName: "TestCompany", 
+                                                 company_level: AgentLevelEnum.Beginner, 
                                                  fixedCostStrategy: new BasicFixedCostStrategy(),
                                                  strategy: new BasicGrowthStrategy());
         var inventory = TestCompany.GetInventory();
@@ -241,8 +241,8 @@ public class RecipeTests
     public void MakingRecipeUpdatesAcquisitionCostToCostOfIngredients()
     {
         //Arrange
-        var TestCompany = Company.Factory.Create(companyName: "TestCompany", 
-                                                 company_level: CompanyLevelEnum.Beginner, 
+        var TestCompany = EconAgent.Factory.Create(companyName: "TestCompany", 
+                                                 company_level: AgentLevelEnum.Beginner, 
                                                  fixedCostStrategy: new BasicFixedCostStrategy(),
                                                  strategy: new BasicGrowthStrategy());
         var inventory = TestCompany.GetInventory();

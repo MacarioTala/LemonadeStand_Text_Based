@@ -55,7 +55,7 @@ public class MockDemographicManager : iDemographicManager
         return LemonadeStandResultObject.Success();
     }
 
-    public LemonadeStandResultObject SetPopulation(int newPopulation, PopulationCompany marketParticipant)
+    public LemonadeStandResultObject SetPopulation(int newPopulation, PopulationAgent marketParticipant)
     {
         _population = newPopulation;
         return LemonadeStandResultObject.Success();

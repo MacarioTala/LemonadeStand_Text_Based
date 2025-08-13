@@ -13,7 +13,7 @@ public class BasicFixedCostsTests
     public void CalcFixedCostsForPeriodSumsAllValidCosts()
     {
         // Arrange
-        var company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner,null, new BasicFixedCostStrategy());
+        var company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner,null, new BasicFixedCostStrategy());
         
         var rent = new FixedCost
         {
@@ -44,7 +44,7 @@ public class BasicFixedCostsTests
     public void WhenCalculatingForPeriod2FixedCostsShouldIgnoreCostsWithFrequency2()
     {
         // Arrange
-        var company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner,null, new BasicFixedCostStrategy());
+        var company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner,null, new BasicFixedCostStrategy());
         var rent = new FixedCost
         {
             Description = "Rent",
@@ -74,7 +74,7 @@ public class BasicFixedCostsTests
     public void WhenCalculatingForPeriod2FixedCostsShouldIgnoreCostsAcquiredInPeriod2()
     {
         // Arrange
-        var company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner,null, new BasicFixedCostStrategy());
+        var company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner,null, new BasicFixedCostStrategy());
         var rent = new FixedCost
         {
             Description = "Rent",
@@ -103,7 +103,7 @@ public class BasicFixedCostsTests
     public void FixedCostsWithInvalidFrequencyShouldThrowException()
     {
         // Arrange
-        var company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner,null, new BasicFixedCostStrategy());
+        var company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner,null, new BasicFixedCostStrategy());
         var rent = new FixedCost
         {
             Description = "Rent",
@@ -120,7 +120,7 @@ public class BasicFixedCostsTests
     public void IfMultipleFixedCostsExistAcquiredInMultiplePeriodsOnlySumValidCosts()
     {
         //arrange
-       var company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner,null, new BasicFixedCostStrategy());
+       var company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner,null, new BasicFixedCostStrategy());
         var rent = new FixedCost
         {
             Description = "Rent",
@@ -178,7 +178,7 @@ public class BasicFixedCostsTests
     public void FixedCostsForFreq2AcquiredOnP1IsNotIncludedInP4()
     {
         //arrange
-       var company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner,null, new BasicFixedCostStrategy());
+       var company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner,null, new BasicFixedCostStrategy());
         var rent = new FixedCost
         {
             Description = "Rent",
@@ -199,7 +199,7 @@ public class BasicFixedCostsTests
     public void IfFixedCostsAreEmptyReturnZero()
     {
         //arrange
-        var company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner,null, new BasicFixedCostStrategy());
+        var company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner,null, new BasicFixedCostStrategy());
         var period = 4;
         var expected = 0m;
         //act

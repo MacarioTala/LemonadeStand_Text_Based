@@ -15,11 +15,11 @@ public class RecordingExecutions
     Market TestMarket;
     int Period;
 
-    Company Company1;
-    Company Company2;
+    EconAgent Company1;
+    EconAgent Company2;
 
     iStrategy TestBehaviourStrategy;
-    PopulationCompany TestPopulation;
+    PopulationAgent TestPopulation;
     readonly PriceBand PriceBand1 = new(.5m, 1.0m);
     readonly PriceBand PriceBand2 = new(5.0m, 10m);
 
@@ -47,7 +47,7 @@ public class RecordingExecutions
                 .DescribedAs("Reduces ennui")
                 .Affecting(MetricEnum.Ennui)
                 .WithEffectMagnitude(-.4f)
-                .WithEffect(new MetricModifier<PopulationCompany>(
+                .WithEffect(new MetricModifier<PopulationAgent>(
                            c => c.Ennui,
                            (c, newValue) => c.Ennui = newValue)
                            );
@@ -64,9 +64,9 @@ public class RecordingExecutions
             {Lemonade, LemonadeDemand},
         };
 
-        TestPopulation = CompanyBuilder.For<PopulationCompany>()
+        TestPopulation = EconAgentBuilder.For<PopulationAgent>()
             .Named("Test Population")
-            .AtLevel(CompanyLevelEnum.Beginner)
+            .AtLevel(AgentLevelEnum.Beginner)
             .WithPopulation(100)
             .WithInitialCash(10000)
             .WithBehaviourStrategy(TestBehaviourStrategy)
@@ -76,14 +76,14 @@ public class RecordingExecutions
             .Build();
         TestBehaviourStrategy.GenerateGoals(TestPopulation);
 
-        TestMarket = Market.Factory.CreateMarket("Test Market", CompanyLevelEnum.Market)
+        TestMarket = Market.Factory.CreateMarket("Test Market", AgentLevelEnum.Market)
             .WithDemandStrategy(TestDemandStrategy)
             .WithTradeProcessor(new BasicTradeProcessor())
             .WithPriceManager(new BasicPriceManager())
             .WithDemographicManager(new MockDemographicManager())
             .WithTransactionManager(new BasicTransactionManager());
-        Company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company 2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company 2", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(Company1);
         TestMarket.RegisterMarketParticipant(Company2);
         TestMarket.RegisterMarketParticipant(TestPopulation);
@@ -135,7 +135,7 @@ public class RecordingExecutions
      public void ProcessCompanyOrdersRecordsExecutionsInOrders_1P2CP()
      {
         //Arrange
-        var Company3 = Company.Factory.Create("Company 3",CompanyLevelEnum.Beginner);
+        var Company3 = EconAgent.Factory.Create("Company 3",AgentLevelEnum.Beginner);
         var Company1BuysLemonadeFromAnyone = new Order(Company1, null, Lemonade, 10, 10m);
         var Company2SellsLemonadeToAnyone = new Order(null, Company2, Lemonade, 5, 10m);
         var Company3SellsLemonadeToAnyone = new Order(null, Company3, Lemonade, 5, 10m);
@@ -231,7 +231,7 @@ public class RecordingExecutions
     public void OneBuyerTwoSellersFullyFilled()
     {
         //Arrange
-        var Company3 = Company.Factory.Create("Company 3",CompanyLevelEnum.Beginner);
+        var Company3 = EconAgent.Factory.Create("Company 3",AgentLevelEnum.Beginner);
         Company2.GetInventory().AddGood(new InventoryEntry(Lemon, 1, 1m, 1));
         Company3.GetInventory().AddGood(new InventoryEntry(Lemon, 1, 1m, 1));
 
@@ -300,7 +300,7 @@ public class RecordingExecutions
         //Arrange
         Company1.GetInventory().AddGood(new InventoryEntry(Lemonade, company1Quantity, company1Ask, Period));
 
-        var Company3 = Company.Factory.Create("Company 3",CompanyLevelEnum.Beginner);
+        var Company3 = EconAgent.Factory.Create("Company 3",AgentLevelEnum.Beginner);
         Company3.SetCash(1000);
         var Company1SellsToAnyone = new Order(null,Company1, Lemonade, company1Quantity, company1Ask);
         var Company2BuysFromAnyone = new Order(Company2, null, Lemonade, company2Quantity, company1Ask);

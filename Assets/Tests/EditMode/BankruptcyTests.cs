@@ -7,7 +7,7 @@ public class BankruptcyTests
 {
     private readonly TheEconomy testEconomy=TheEconomy.Instance;
     Market TestMarket;
-    Company Company1;
+    EconAgent Company1;
 
     readonly iFixedCostStrategy TestFixedCostStrategy = new BasicFixedCostStrategy();
     readonly iDemandStrategy TestDemandStrategy = ScriptableObject.CreateInstance<LinearDemandStrategy>();
@@ -22,7 +22,7 @@ public class BankruptcyTests
         var existingMarket = TheEconomy.Instance.GetMarketByName("The First Market");
         testEconomy.RemoveMarket(existingMarket);
 
-        TestMarket= Market.Factory.CreateMarket("Test Market", CompanyLevelEnum.Market)
+        TestMarket= Market.Factory.CreateMarket("Test Market", AgentLevelEnum.Market)
                             .WithDataService(TestMarketDataService)
                             .WithDemographicManager(TestDemographicManager)
                             .WithSupplyProvider(TestSupplyProvider)
@@ -43,7 +43,7 @@ public class BankruptcyTests
         };
         ((MockMarketDataService)TestMarketDataService).SetPopulationHistory(populationHistory);
 
-        Company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner, null, TestFixedCostStrategy);
+        Company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner, null, TestFixedCostStrategy);
         TestMarket.RegisterMarketParticipant(Company1);
     }
 

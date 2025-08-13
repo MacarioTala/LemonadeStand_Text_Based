@@ -13,10 +13,10 @@ public class ChangePopulationEffect : iMarketEffect
     public void Apply(Market market)
     {
         var marketPopulations = market.GetMarketParticipants()
-            .Where(x => x is PopulationCompany)
+            .Where(x => x is PopulationAgent)
             .ToList();
 
-        foreach (PopulationCompany populationCompany in marketPopulations)
+        foreach (PopulationAgent populationCompany in marketPopulations)
         {
             var population = populationCompany.Population;
             var delta = (int)Math.Round(population * _conversion,0);

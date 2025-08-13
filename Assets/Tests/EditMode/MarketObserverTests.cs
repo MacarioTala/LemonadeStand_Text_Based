@@ -12,8 +12,8 @@ public class MarketObserverTests
     Good Water;
     Good Sugar;
 
-    Company Company1;
-    Company Company2;
+    EconAgent Company1;
+    EconAgent Company2;
 
     Market TestMarket;
 
@@ -27,11 +27,11 @@ public class MarketObserverTests
         Lemonade = Good.CreateInstance("Lemonade", new PriceBand(5.0m, 10m), RarityEnum.Uncommon);
         Water = Good.CreateInstance("Water", new PriceBand(0.1m, 0.5m), RarityEnum.Common);
         Sugar = Good.CreateInstance("Sugar", new PriceBand(0.2m, 0.8m), RarityEnum.Common);
-        Company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company 2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company 2", AgentLevelEnum.Beginner);
 
         TestMarket = Market.Factory.CreateMarket("Test Market"
-                                                , CompanyLevelEnum.Market
+                                                , AgentLevelEnum.Market
                                                 )
                 .WithDemandStrategy(TestDemandStrategy)
                 .WithSupplyProvider(TestSupplyProvider)

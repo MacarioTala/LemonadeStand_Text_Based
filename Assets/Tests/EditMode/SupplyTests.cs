@@ -12,8 +12,8 @@ public class SupplyTests
     Market TestMarket;
     int Period;
 
-    Company Company1;
-    Company Company2;
+    EconAgent Company1;
+    EconAgent Company2;
     readonly PriceBand PriceBand1 = new(.5m, 1.0m);
     readonly PriceBand PriceBand2 = new(5.0m, 10m);
     readonly iSupplyProvider TestSupplyProvider= new BasicSupplyProvider();
@@ -25,15 +25,15 @@ public class SupplyTests
         TheEconomy.SetupForTests(new MockLogger());
         TestEconomy = TheEconomy.Instance;
 
-        TestMarket = Market.Factory.CreateMarket("Test Market", CompanyLevelEnum.Market)
+        TestMarket = Market.Factory.CreateMarket("Test Market", AgentLevelEnum.Market)
         .WithDemandStrategy(TestDemandStrategy)
             .WithSupplyProvider(TestSupplyProvider)
             .WithTradeProcessor(new BasicTradeProcessor())
             .WithPriceManager(new BasicPriceManager());
         TestSupplyProvider.Initialize(TestMarket);
 
-        Company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company 2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company 2", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(Company1);
         TestMarket.RegisterMarketParticipant(Company2);
 

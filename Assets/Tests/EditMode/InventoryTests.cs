@@ -8,7 +8,7 @@ using System.Linq;
 [TestFixture]
 public class InventoryTests
 {
-    private Company test_company;
+    private EconAgent test_company;
     private Good lemon;
     private Good sugar;
     private Good water;
@@ -24,7 +24,7 @@ public class InventoryTests
     public void Setup()
     {
         //create a test company
-        test_company = ScriptableObject.CreateInstance<Company>();
+        test_company = ScriptableObject.CreateInstance<EconAgent>();
         test_company.Name = "Test Company";
 
         //create test goods

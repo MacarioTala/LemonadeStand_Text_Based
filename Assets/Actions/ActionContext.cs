@@ -8,8 +8,8 @@ public class ActionContext
     public Market MarketToSubmitTo;
     public int Period;
 
-    private iCompany _submittingCompany;
-    public iCompany SubmittingCompany
+    private iEconAgent _submittingCompany;
+    public iEconAgent SubmittingCompany
     {
         get => _submittingCompany;
         set
@@ -21,7 +21,7 @@ public class ActionContext
     }
     
     //Make Recipe
-    public Company RecipeMaker;
+    public EconAgent RecipeMaker;
     public Recipe Recipe;
     public int QuantityToMake;
 

@@ -62,7 +62,7 @@ public interface iDemandStrategy
     {
         var populationOrders = market.GetOrdersSubmittedInPeriod(tradingPeriod)
             .Where(x => x.Good.Equals(good))
-            .Where(x => x.Buyer is PopulationCompany)
+            .Where(x => x.Buyer is PopulationAgent)
             .ToList();
         var TotalBought = populationOrders
             .Sum(x => x.FilledQuantity);

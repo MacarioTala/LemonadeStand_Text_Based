@@ -29,7 +29,7 @@ public class EnnuiTests
                   .DescribedAs("Reduces ennui")
                   .Affecting(MetricEnum.Ennui)
                   .WithEffectMagnitude(-.40f)
-                  .WithEffect(new MetricModifier<PopulationCompany>(
+                  .WithEffect(new MetricModifier<PopulationAgent>(
                            c => c.Ennui,
                            (c, newValue) => c.Ennui = newValue));
       Lemonade.AddEffect(reduceEnnuiEffect);
@@ -37,14 +37,14 @@ public class EnnuiTests
       ReduceEnnuiGoal = new Goal()
                 .Named("Reduce Ennui")
                 .DescribedAs("Reduce the ennui of the population to 0")
-                .WithGoalEvaluator(c => c is PopulationCompany populationCompany && populationCompany.Ennui == 0)
-                .WithGoalInitializer((c, g) => g.SetOriginalValue("Ennui", ((PopulationCompany)c).Ennui))
+                .WithGoalEvaluator(c => c is PopulationAgent populationCompany && populationCompany.Ennui == 0)
+                .WithGoalInitializer((c, g) => g.SetOriginalValue("Ennui", ((PopulationAgent)c).Ennui))
                 .Affecting(MetricEnum.Ennui)
                 .WithGoalValue(.5f);
 
       TestDemandStrategy = ScriptableObject.CreateInstance<LinearDemandStrategy>();
       var mockDemographicManager = new Mock<iDemographicManager>().Object;
-      TestMarket = Market.Factory.CreateStarterMarket("Test Market", CompanyLevelEnum.Market, TestDemandStrategy)
+      TestMarket = Market.Factory.CreateStarterMarket("Test Market", AgentLevelEnum.Market, TestDemandStrategy)
                .WithDemographicManager(mockDemographicManager);
 
    }
@@ -53,7 +53,7 @@ public class EnnuiTests
    public void PopulationsThatMaxOutOnEnnuiCollapse()
    {
       //Arrange
-      var population = CompanyBuilder.For<PopulationCompany>()
+      var population = EconAgentBuilder.For<PopulationAgent>()
          .Named("Really Lazy Population")
          .WithEnnui(1)
          .Build();
@@ -93,7 +93,7 @@ public class EnnuiTests
                      .WithAggressionLevel(.5m)
                      .Build();
 
-      var population = CompanyBuilder.For<PopulationCompany>()
+      var population = EconAgentBuilder.For<PopulationAgent>()
          .Named("Test Population")
          .WithInitialCash(1000)
          .WithEnnui(initialEnnui)
@@ -133,7 +133,7 @@ public class EnnuiTests
       .Named("Fruit Punch Effect")
       .Affecting(MetricEnum.Ennui)
       .WithEffectMagnitude(-.10f)
-      .WithEffect(new MetricModifier<PopulationCompany>(
+      .WithEffect(new MetricModifier<PopulationAgent>(
                 c => c.Ennui,
                 (c, newValue) => c.Ennui = newValue));
       FruitPunch.AddEffect(FruitPunchEffect);
@@ -159,7 +159,7 @@ public class EnnuiTests
                      .WithAggressionLevel(.5m)
                      .Build();
 
-      var population = CompanyBuilder.For<PopulationCompany>()
+      var population = EconAgentBuilder.For<PopulationAgent>()
          .Named("Test Population")
          .WithInitialCash(1000)
          .WithEnnui(initialEnnui)
@@ -199,7 +199,7 @@ public class EnnuiTests
       var strategy = StrategyBuilder.For<ReduceEnnuiStrategy>()
                      .WithAggressionLevel(.5m)
                      .Build();
-      var population = CompanyBuilder.For<PopulationCompany>()
+      var population = EconAgentBuilder.For<PopulationAgent>()
          .Named("Test Population")
          .WithInitialCash(1000)
          .WithEnnui(initialEnnui)
@@ -250,7 +250,7 @@ public class EnnuiTests
                      .WithAggressionLevel(.5m)
                      .Build();
 
-      var population = CompanyBuilder.For<PopulationCompany>()
+      var population = EconAgentBuilder.For<PopulationAgent>()
          .Named("Test Population")
          .WithInitialCash(1000)
          .WithEnnui(initialEnnui)
@@ -289,7 +289,7 @@ public class EnnuiTests
                      .WithAggressionLevel(.5m)
                      .Build();
 
-      var population = CompanyBuilder.For<PopulationCompany>()
+      var population = EconAgentBuilder.For<PopulationAgent>()
          .Named("Test Population")
          .WithInitialCash(1000)
          .WithEnnui(initialEnnui)
@@ -330,7 +330,7 @@ public class EnnuiTests
                      .WithAggressionLevel(.5m)
                      .Build();
 
-      var population = CompanyBuilder.For<PopulationCompany>()
+      var population = EconAgentBuilder.For<PopulationAgent>()
          .Named("Test Population")
          .WithInitialCash(1000)
          .WithEnnui(initialEnnui)

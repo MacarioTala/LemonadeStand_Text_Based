@@ -5,11 +5,11 @@ public class GoodEffect
     public string Name {get;internal set;}
     public string Description {get; internal set;}
     public MetricEnum AffectsMetric {get; internal set;}
-    public MetricModifier<PopulationCompany> Effect{get; internal set;}
+    public MetricModifier<PopulationAgent> Effect{get; internal set;}
     public float Magnitude {get; internal set;}
     public bool IsReduce {get => Magnitude < 0;}
 
-    public void Apply(PopulationCompany company,float percentageToApply=1f)
+    public void Apply(PopulationAgent company,float percentageToApply=1f)
     {
         Effect?.Modify(company, percentageToApply*Magnitude);
     }
@@ -36,7 +36,7 @@ public static class GoodEffectBuilder
         effect.AffectsMetric = metric;
         return effect;
     }
-    public static GoodEffect WithEffect(this GoodEffect effect, MetricModifier<PopulationCompany> func)
+    public static GoodEffect WithEffect(this GoodEffect effect, MetricModifier<PopulationAgent> func)
     {
         effect.Effect = func;
         return effect;

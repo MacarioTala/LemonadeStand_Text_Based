@@ -11,7 +11,7 @@ public class RecordingDemographicHistoryTests
 {
     private TheEconomy testEconomy;
     Market TestMarket;
-    Company Company1;
+    EconAgent Company1;
 
     readonly iFixedCostStrategy TestFixedCostStrategy = new BasicFixedCostStrategy();
     readonly iDemandStrategy TestDemandStrategy = ScriptableObject.CreateInstance<LinearDemandStrategy>();
@@ -32,7 +32,7 @@ public class RecordingDemographicHistoryTests
         TestDemographicManager = new BasicDemographicManager();
         TestDemographicManager.SetPopulationHistoryHandler(TestPopulationHistoryDataHandler);
 
-        TestMarket= Market.Factory.CreateStarterMarket("Test Market", CompanyLevelEnum.Market, TestDemandStrategy)
+        TestMarket= Market.Factory.CreateStarterMarket("Test Market", AgentLevelEnum.Market, TestDemandStrategy)
             .WithDataService(TestMarketDataService)
             .WithDemographicManager(TestDemographicManager)
             .WithSupplyProvider(TestSupplyProvider);
@@ -41,7 +41,7 @@ public class RecordingDemographicHistoryTests
         
         testEconomy.RegisterCompany(TestMarket);
 
-        Company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner, null, TestFixedCostStrategy);
+        Company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner, null, TestFixedCostStrategy);
         TestMarket.RegisterMarketParticipant(Company1);
     }
     [TearDown]
@@ -88,7 +88,7 @@ public class RecordingDemographicHistoryTests
     public void StartTradingPeriodAddsRowToPopulationHistory()
     {
         //Arrange
-        var testPopulation = CompanyBuilder.For<PopulationCompany>()
+        var testPopulation = EconAgentBuilder.For<PopulationAgent>()
             .WithPopulation(1000)
             .WithFixedCostStrategy(TestFixedCostStrategy)
             .Named("Test Population")
@@ -115,7 +115,7 @@ public class RecordingDemographicHistoryTests
     {
         //Arrange
         var populationFixedCostStrategy = new BasicFixedCostStrategy();
-        var peopleInTheMarket = CompanyBuilder.For<PopulationCompany>()
+        var peopleInTheMarket = EconAgentBuilder.For<PopulationAgent>()
             .WithPopulation(1000)
             .WithFixedCostStrategy(populationFixedCostStrategy)
             .Named("People in the Market")
@@ -159,7 +159,7 @@ public class RecordingDemographicHistoryTests
 public void MultiplePeriodsRecordDistinctSnapshots()
 {
     // Arrange
-    var testPopulation = CompanyBuilder.For<PopulationCompany>()
+    var testPopulation = EconAgentBuilder.For<PopulationAgent>()
         .WithPopulation(1000)
         .WithFixedCostStrategy(TestFixedCostStrategy)
         .Named("Test Population")

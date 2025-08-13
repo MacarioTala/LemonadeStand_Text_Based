@@ -27,7 +27,7 @@ public class BuilderTests
     {
         // Arrange
         const string expectedName = "Test Company";
-        var testCompany = CompanyBuilder.For<Company>()
+        var testCompany = EconAgentBuilder.For<EconAgent>()
                     .Named(expectedName)
                     .Build();
         // Act
@@ -39,14 +39,14 @@ public class BuilderTests
     public void UsingTheBuilderToBuildPopulationCompanyShouldReturnPopulationCompany()
     {
         //Arrange
-        var testCompany = CompanyBuilder.For<PopulationCompany>()
+        var testCompany = EconAgentBuilder.For<PopulationAgent>()
                     .Build();
-        var expected = typeof(PopulationCompany);
+        var expected = typeof(PopulationAgent);
         //Act
         var actual = testCompany.GetType();
         //Assert
         Assert.AreEqual(expected, actual);
-        Assert.IsTrue(testCompany is PopulationCompany);
+        Assert.IsTrue(testCompany is PopulationAgent);
     }
 #endregion
 }

@@ -1,6 +1,6 @@
 public class MarketData
 {
-    public iCompany Company;
+    public iEconAgent Company;
     public Good Good;
     public decimal Bid;
     public decimal Ask;

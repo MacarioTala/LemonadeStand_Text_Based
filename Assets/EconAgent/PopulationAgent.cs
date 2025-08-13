@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
-public class PopulationCompany : Company
+public class PopulationAgent : EconAgent
 {
 
     #region Demographics
@@ -33,12 +32,12 @@ public class PopulationCompany : Company
     }
     #endregion
 
-    private PopulationCompany() { }
+    private PopulationAgent() { }
 
-    public static class PopulationCompanyBuilder
+    public static class PopulationAgentBuilder
     {
-        public static CompanyBuilder<PopulationCompany> Create()
-                             => CompanyBuilder.For<PopulationCompany>();
+        public static EconAgentBuilder<PopulationAgent> Create()
+                             => EconAgentBuilder.For<PopulationAgent>();
     }
 
     #region Consumption

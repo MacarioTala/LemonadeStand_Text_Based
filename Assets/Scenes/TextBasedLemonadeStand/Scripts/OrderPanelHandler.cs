@@ -20,7 +20,7 @@ public class OrderPanelHandler : MonoBehaviour
     [SerializeField] private GameObject OrderQueuedLabel;
     [SerializeField] private GameObject DetailedOrderPanel;
     [SerializeField] private Button ShowDetailedOrderButton;
-    private Company PlayerCompany;
+    private EconAgent PlayerCompany;
     private Market LocalMarket;
     private List<InventoryEntry> MarketInventoryEntries;
     private TMP_Dropdown dropdown;
@@ -138,7 +138,7 @@ public class OrderPanelHandler : MonoBehaviour
     public void InitializePlayer()
     {
         var companies = TheEconomy.Instance.companies;
-        var playerCompanies = companies.OfType<Company>().Where(c => c.IsPlayer);
+        var playerCompanies = companies.OfType<EconAgent>().Where(c => c.IsPlayer);
         if (playerCompanies.Count() == 1)
         {
             PlayerCompany = playerCompanies.First();
@@ -160,7 +160,7 @@ public class OrderPanelHandler : MonoBehaviour
         var totalprice = decimal.Parse(totalText.text);
         int.TryParse(QuantityInput.GetComponent<TMP_InputField>().text, out var quantity);
     
-        iCompany seller = null; //Market Order
+        iEconAgent seller = null; //Market Order
 
         var order = new Order(PlayerCompany,seller,selectedGood, quantity, totalprice);
         var orderContext = new ActionContext

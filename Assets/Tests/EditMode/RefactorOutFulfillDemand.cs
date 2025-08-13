@@ -9,8 +9,8 @@ public class RefactorOutFulfillDemand
 {
     TheEconomy TestEconomy;
     Market TestMarket;
-    PopulationCompany TestPopulation;
-    Company TestCompany1;
+    PopulationAgent TestPopulation;
+    EconAgent TestCompany1;
     Good Lemon;
     Good Lemonade;
     iStrategy TestReduceEnnuiStrategy;
@@ -44,7 +44,7 @@ public class RefactorOutFulfillDemand
                   .DescribedAs("Reduces ennui")
                   .Affecting(MetricEnum.Ennui)
                   .WithEffectMagnitude(-.40f)
-                  .WithEffect(new MetricModifier<PopulationCompany>(
+                  .WithEffect(new MetricModifier<PopulationAgent>(
                            c => c.Ennui,
                            (c, newValue) => c.Ennui = newValue));
         Lemonade.AddEffect(reduceEnnuiEffect);
@@ -74,9 +74,9 @@ public class RefactorOutFulfillDemand
                 .WithAggressionLevel(.5m)
                 .Build();
         
-        TestPopulation = CompanyBuilder.For<PopulationCompany>()
+        TestPopulation = EconAgentBuilder.For<PopulationAgent>()
                 .Named("Test Population")
-                .AtLevel(CompanyLevelEnum.Beginner)
+                .AtLevel(AgentLevelEnum.Beginner)
                 .WithInitialCash(1000m)
                 .Demanding(Demands)
                 .WithPopulation(100)
@@ -85,9 +85,9 @@ public class RefactorOutFulfillDemand
                 .WithFixedCostStrategy(new BasicFixedCostStrategy())
                 .Build();
 
-        TestCompany1 = CompanyBuilder.For<Company>()
+        TestCompany1 = EconAgentBuilder.For<EconAgent>()
                 .Named("Test Company 1")
-                .AtLevel(CompanyLevelEnum.Beginner)
+                .AtLevel(AgentLevelEnum.Beginner)
                 .WithInitialCash(1000m)
                 .WithFixedCostStrategy(new BasicFixedCostStrategy())
                 .Build();
@@ -95,7 +95,7 @@ public class RefactorOutFulfillDemand
         TestReduceEnnuiStrategy.GenerateGoals(TestPopulation);
 
         TestMarket = Market.Factory
-                .CreateMarket("Test Market", CompanyLevelEnum.Market)
+                .CreateMarket("Test Market", AgentLevelEnum.Market)
                 .WithTradeProcessor(new BasicTradeProcessor())
                 .WithDemandStrategy(TestDemandStrategy)
                 .WithDemographicManager(new MockDemographicManager())

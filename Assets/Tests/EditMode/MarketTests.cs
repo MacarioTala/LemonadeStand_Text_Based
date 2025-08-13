@@ -11,11 +11,11 @@ public partial class MarketTests
     private TheEconomy TestEconomy;
 
     private Market test_initial_market;
-    PopulationCompany TestPopulation;
+    PopulationAgent TestPopulation;
 
     iStrategy TestReduceEnnuiStrategy;
-    Company Company1;
-    Company Company2;
+    EconAgent Company1;
+    EconAgent Company2;
     Market TestMarket;
 
     const int Period = 0;
@@ -53,7 +53,7 @@ public partial class MarketTests
             .Build();
 
         //Setup Market
-        TestMarket = Market.Factory.CreateMarket("Test Market", CompanyLevelEnum.Market)
+        TestMarket = Market.Factory.CreateMarket("Test Market", AgentLevelEnum.Market)
             .WithDemandStrategy(TestDemandStrategy).WithDemandStrategy(TestDemandStrategy)
             .WithTradeProcessor(new BasicTradeProcessor())
             .WithPriceManager(new BasicPriceManager())
@@ -63,9 +63,9 @@ public partial class MarketTests
 
 
         //Setup Population
-        TestPopulation = CompanyBuilder.For<PopulationCompany>()
+        TestPopulation = EconAgentBuilder.For<PopulationAgent>()
             .Named("Test Population")
-            .AtLevel(CompanyLevelEnum.Market)
+            .AtLevel(AgentLevelEnum.Market)
             .WithInitialCash(10000)
             .WithBehaviourStrategy(TestReduceEnnuiStrategy)
             .WithEnnui(.99f)
@@ -74,8 +74,8 @@ public partial class MarketTests
         TestReduceEnnuiStrategy.GenerateGoals(TestPopulation);
 
         //Setup Companies
-        Company1 = Company.Factory.Create("Company1", CompanyLevelEnum.Beginner);
-        Company2 = Company.Factory.Create("Company2", CompanyLevelEnum.Beginner);
+        Company1 = EconAgent.Factory.Create("Company1", AgentLevelEnum.Beginner);
+        Company2 = EconAgent.Factory.Create("Company2", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(Company1);
         TestMarket.RegisterMarketParticipant(Company2);
         TestMarket.RegisterMarketParticipant(TestPopulation);
@@ -89,7 +89,7 @@ public partial class MarketTests
     private void SetupInitialMarket()
     {
         test_initial_market = Market.Factory.CreateStarterMarket(companyName: "The First Market", 
-                                                    companyLevel: CompanyLevelEnum.Market,
+                                                    companyLevel: AgentLevelEnum.Market,
                                                     demandStrategy: TestDemandStrategy);
         test_initial_market.InitializeDemandForSpecificGood(lemon, 1000);
     }
@@ -183,7 +183,7 @@ public partial class MarketTests
         // Arrange
         var tradingPeriod = 1;
         var testMarket = TestMarket;
-        var company = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
         testMarket.RegisterMarketParticipant(company);
         var francium = Good.CreateInstance("Francium", band2, RarityEnum.Very_Rare);
         francium.ExpiresAfterPeriods = 1;
@@ -205,7 +205,7 @@ public partial class MarketTests
         // Arrange
         var period = 1;
         var testMarket = TestMarket;
-        var company = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
         testMarket.RegisterMarketParticipant(company);
         var ripeLemon = Good.CreateInstance("Ripe Lemon", band2, RarityEnum.Common);
         ripeLemon.ExpiresAfterPeriods = 1;
@@ -234,7 +234,7 @@ public partial class MarketTests
     {
         // Arrange
         var tradingPeriod = 1;
-        var company = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
         var testMarket = TestMarket;
         testMarket.RegisterMarketParticipant(company);
         company.GetInventory().AddGood(new InventoryEntry(lemon, 10, 3.0m,0));
@@ -263,7 +263,7 @@ public partial class MarketTests
     {
         // Arrange
         var tradingPeriod = 1;
-        var company = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
+        var company = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
         var testMarket = TestMarket;
         testMarket.RegisterMarketParticipant(company);
         
@@ -288,7 +288,7 @@ public partial class MarketTests
    public void Companies_cannot_make_goods_without_a_recipe()
    {
        // Arrange
-       var company = Company.Factory.Create("Company1", CompanyLevelEnum.Beginner);
+       var company = EconAgent.Factory.Create("Company1", AgentLevelEnum.Beginner);
        company.BuyGood(lemon, 10,3.0m);
        company.BuyGood(sugar, 10,3.0m);
        company.BuyGood(water, 10,3.0m);
@@ -333,7 +333,7 @@ public partial class MarketTests
     public void PublishSpreadToMarket_should_update_existing_MarketData_if_spread_exists()
     {
         // Arrange
-        var company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
+        var company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(company1);
         var context = new ActionContext{BidToSubmit = 2.0m, AskToSubmit = 3.0m, GoodToSubmit = lemon, MarketToSubmitTo = TestMarket};
         var expected = new List<MarketData>{new() { Good = lemon, Company = company1, Bid = 2.0m, Ask = 3.0m}};
@@ -350,7 +350,7 @@ public partial class MarketTests
     public void PublishSpreadToMarketReturnsErrorIfActionContextIsIncomplete()
     {
         // Arrange
-        var company1 = Company.Factory.Create("Company 1", CompanyLevelEnum.Beginner);
+        var company1 = EconAgent.Factory.Create("Company 1", AgentLevelEnum.Beginner);
         TestMarket.RegisterMarketParticipant(company1);
         var context = new ActionContext{BidToSubmit = 2.0m, AskToSubmit = 3.0m, GoodToSubmit = lemon};
         

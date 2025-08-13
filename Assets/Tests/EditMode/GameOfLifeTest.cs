@@ -10,7 +10,7 @@ public class GameOfLifeTest
 
     private Market LemonadeMarket;
 
-    private readonly List<Company> Companies = new();
+    private readonly List<EconAgent> Companies = new();
 
     private Good Lemon;
     private Good Water;
@@ -68,7 +68,7 @@ public class GameOfLifeTest
         var numberOfCompanies = random.Next(1, 10);
         for (int i = 0; i < numberOfCompanies; i++)
         {
-            var company = Company.Factory.Create("Company" + i, CompanyLevelEnum.Beginner);
+            var company = EconAgent.Factory.Create("Company" + i, AgentLevelEnum.Beginner);
             TheEconomy.Instance.RegisterCompany(company);
             Companies.Add(company);
         }
@@ -135,8 +135,8 @@ public class GameOfLifeTest
 
     private void PerformRandomTrade(int cycle)
     {
-        var potentialSellers = new List<iCompany>(Companies) { LemonadeMarket };
-        var potentialBuyers = new List<iCompany>(Companies) { LemonadeMarket };
+        var potentialSellers = new List<iEconAgent>(Companies) { LemonadeMarket };
+        var potentialBuyers = new List<iEconAgent>(Companies) { LemonadeMarket };
 
         var buyer = potentialBuyers[Random.Range(0, potentialBuyers.Count)];
         var seller = potentialSellers[Random.Range(0, potentialSellers.Count)];

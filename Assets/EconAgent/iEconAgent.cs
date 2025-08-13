@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public interface iCompany
+public interface iEconAgent
 {
     #region Identity
         string Name{get;set;}
